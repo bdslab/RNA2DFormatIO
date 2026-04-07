@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <antlr4.version>4.13.2</antlr4.version>
         <jupiter.version>6.0.1</jupiter.version>
+        <jsoup.version>1.15.4</jsoup.version>
     </properties>
 
     <dependencies>
@@ -30,6 +31,13 @@
             <artifactId>junit-jupiter-api</artifactId>
             <version>${jupiter.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Xml-->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
         </dependency>
     </dependencies>
 
