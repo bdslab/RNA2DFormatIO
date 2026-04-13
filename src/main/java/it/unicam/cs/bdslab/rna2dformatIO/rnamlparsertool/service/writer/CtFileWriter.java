@@ -6,7 +6,7 @@ import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model.RnaMolecule;
 import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model.RnaChain;
 
 /**
- * Classe per scrivere dati nel formato CT
+ * Class responsible for writing data in CT (Connect) format.
  *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
@@ -14,6 +14,13 @@ public final class CtFileWriter extends TextFileWriter {
 
     private int count = 1;
 
+    /**
+     * Writes the given RNA molecule data to the specified file in CT format.
+     *
+     * @param chains the RNA molecule containing the data to write
+     * @param path   the destination file path
+     * @return {@code true} if the file was successfully written, {@code false} otherwise
+     */
     @Override
     public boolean writeAndSave(RnaMolecule chains, String path) {
         setFileInfo(chains);
@@ -23,9 +30,9 @@ public final class CtFileWriter extends TextFileWriter {
     }
 
     /**
-     * Scrive i dati di una catena nel formato CT
+     * Appends the data of a single chain to the output buffer in CT format.
      *
-     * @param m catena da scrivere
+     * @param m the RNA chain to write
      */
     private void writechain(RnaChain m) {
         char[] array = m.getSequence().toCharArray();
@@ -37,6 +44,5 @@ public final class CtFileWriter extends TextFileWriter {
                     + " " + (pair == -1 ? "0" : pair) + " " + count++ + "\n";
         }
     }
-
 
 }

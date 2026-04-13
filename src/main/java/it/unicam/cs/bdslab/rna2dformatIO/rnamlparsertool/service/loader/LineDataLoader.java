@@ -1,56 +1,57 @@
 package it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.service.loader;
 
 import java.util.List;
-
 import java.util.ArrayList;
 
 /**
- * Classe astratta contenti metodi utili a caricatori di formati
- * di dati disposti a linea
+ * Abstract class containing utility methods for loaders that handle
+ * line-based data formats.
+ *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public abstract class LineDataLoader extends TextDataLoader {
 
     /**
-     * Metodo per trovare tutti gli indici contenenti una sequenza
-     * @param lines linee da controllare
-     * @return indici con sequenze di ribonucleidi
+     * Finds all line indices that contain a nucleotide sequence.
+     *
+     * @param lines the list of line tokens to examine
+     * @return a list of indices where sequences are located
      */
     protected List<Integer> getSequencePositions(List<List<String>> lines) {
         List<Integer> list = new ArrayList<>();
-        for(int i = 0; i < lines.size(); i++) {
-            if(lines.get(i).size() == 1 && isSequence(lines.get(i).get(0)))
+        for (int i = 0; i < lines.size(); i++) {
+            if (lines.get(i).size() == 1 && isSequence(lines.get(i).get(0)))
                 list.add(i);
         }
         return list;
     }
 
     /**
-     * metodo per controllare se una data parola è una sequenza
-     * @param word parola da controllare
-     * @return true se è una sequenza, false altrimenti
+     * Checks whether a given word represents a valid nucleotide sequence.
+     *
+     * @param word the word to check
+     * @return {@code true} if the word is a sequence, {@code false} otherwise
      */
     private boolean isSequence(String word) {
-        if(word == null || word.length() == 0)
+        if (word == null || word.length() == 0)
             return false;
         word = word.toUpperCase();
-        for(char letter : word.toCharArray()) {
-            if(isNotSequenceLetter(letter))
+        for (char letter : word.toCharArray()) {
+            if (isNotSequenceLetter(letter))
                 return false;
         }
         return true;
     }
 
     /**
-     * Metodo per verificare se un carattere
-     * può far parte di una sequenza
-     * @param letter carattere da controllare
-     * @return true se è invalido, false altrimenti
+     * Verifies whether a character can be part of a nucleotide sequence.
+     *
+     * @param letter the character to check
+     * @return {@code true} if the character is invalid, {@code false} otherwise
      */
     private boolean isNotSequenceLetter(char letter) {
         String l = ("" + letter).toUpperCase();
         return !"ACUGNWRMYKSBVDH".contains(l);
     }
-
 
 }

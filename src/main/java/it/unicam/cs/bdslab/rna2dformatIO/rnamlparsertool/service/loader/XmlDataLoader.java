@@ -17,13 +17,22 @@ import org.xml.sax.SAXException;
 import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.abstraction.RnaDataLoader;
 
 /**
- * classe astratta per ottenere il document xml da un path
- * e operare sui nodi
+ * Abstract class providing utility methods to load an XML document from a file path
+ * and to operate on XML nodes.
+ *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public abstract class XmlDataLoader implements RnaDataLoader {
 
-    protected Document loadXmlDocument(String path, String dtdPath){
+    /**
+     * Loads and parses an XML document from the specified file path, using a local
+     * DTD resource to avoid external network access during validation.
+     *
+     * @param path    the file path of the XML document
+     * @param dtdPath the classpath resource path to the DTD file (e.g., "/rnaml.dtd")
+     * @return the parsed and normalized {@link Document}, or {@code null} if an error occurs
+     */
+    protected Document loadXmlDocument(String path, String dtdPath) {
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             builder.setEntityResolver(new EntityResolver() {
@@ -47,9 +56,10 @@ public abstract class XmlDataLoader implements RnaDataLoader {
     }
 
     /**
-     * se un nodo e' un elemento torna l'elemento, altrimenti null
-     * @param node
-     * @return
+     * Safely casts a DOM {@link Node} to an {@link Element} if it is an element node.
+     *
+     * @param node the DOM node to check
+     * @return the node as an {@link Element}, or {@code null} if it is not an element node
      */
     protected Element getElement(Node node) {
         if (node.getNodeType() == Node.ELEMENT_NODE) {

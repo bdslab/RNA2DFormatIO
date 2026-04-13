@@ -10,23 +10,31 @@ import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model.RnaMolecule;
 import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model.RnaChain;
 
 /**
- * Classe per il salvataggio di dati nel formato RNAML
+ * Class responsible for saving data in RNAML format.
+ *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public final class RnamlFileWriter extends XmlFileWriter {
 
     /**
-     * Element root, in questo caso sarà un nodo <rnaml> ... </rnaml>
+     * Root element of the XML document; in this case it will be an {@code <rnaml>} node.
      */
     private Element root;
 
+    /**
+     * Writes the given RNA molecule data to the specified file in RNAML format.
+     *
+     * @param chains the RNA molecule containing the data to write
+     * @param path   the destination file path
+     * @return {@code true} if the file was successfully written, {@code false} otherwise
+     */
     @Override
     public boolean writeAndSave(RnaMolecule chains, String path) {
         createNewDocument();
         this.root = xmlDoc.createElement("rnaml");
         root.setAttribute("version", "1.0");
         xmlDoc.appendChild(root);
-        for(RnaChain chain : chains.getchains()) {
+        for (RnaChain chain : chains.getchains()) {
             addchain(chain, chains.getAccessionNumber(), chains.getOrganism());
             setgetReferenceLink(chains.getReferenceLink(), chain.getchainId());
         }
@@ -34,15 +42,16 @@ public final class RnamlFileWriter extends XmlFileWriter {
     }
 
     /**
-     * metodo per aggiungere una catena alla radice
-     * @param chain catena da aggiungere
-     * @param accessionNumer numero di accesso al db
-     * @param organism nome dell'organismo
+     * Adds a chain to the root element of the XML document.
+     *
+     * @param chain          the RNA chain to add
+     * @param accessionNumer the database accession number (may be {@code null})
+     * @param organism       the organism name (may be {@code null})
      */
     private void addchain(RnaChain chain, String accessionNumer, String organism) {
         Element mol = xmlDoc.createElement("molecule");
         mol.setAttribute("id", "" + chain.getchainId());
-        if(accessionNumer != null){
+        if (accessionNumer != null) {
             mol.setAttribute("database-ids", accessionNumer);
         }
         root.appendChild(mol);
@@ -61,7 +70,7 @@ public final class RnamlFileWriter extends XmlFileWriter {
         List<Entry<Integer, Integer>> pairs = chain.getPairMap().entrySet().stream()
                 .map(x -> x.getKey() < x.getValue() ? x : new SimpleEntry<Integer, Integer>(x.getValue(), x.getKey()))
                 .distinct().toList();
-        for(Entry<Integer, Integer> pair : pairs) {
+        for (Entry<Integer, Integer> pair : pairs) {
             Element base_pair = xmlDoc.createElement("base-pair");
             str_ann.appendChild(base_pair);
             addBase(base_pair, "base-id-5p", pair.getKey());
@@ -69,14 +78,14 @@ public final class RnamlFileWriter extends XmlFileWriter {
         }
     }
 
-
     /**
-     * Imposta il link di riferimento, se esiste
-     * @param referenceLink link di riferimento
-     * @param chainId id della catena
+     * Sets the reference link element if a URL is provided.
+     *
+     * @param referenceLink the reference URL (may be {@code null})
+     * @param chainId       the identifier of the associated chain
      */
-    private void setgetReferenceLink(String referenceLink, int chainId){
-        if(referenceLink != null) {
+    private void setgetReferenceLink(String referenceLink, int chainId) {
+        if (referenceLink != null) {
             Element reference = xmlDoc.createElement("reference");
             reference.setAttribute("id", "" + chainId);
             root.appendChild(reference);
@@ -89,12 +98,13 @@ public final class RnamlFileWriter extends XmlFileWriter {
     }
 
     /**
-     * Imposta l'identità, se esiste
-     * @param mol elemento della catena
-     * @param organism nome dell'organismo
+     * Sets the identity (organism) element if an organism name is provided.
+     *
+     * @param mol      the molecule element to which the identity should be appended
+     * @param organism the organism name (may be {@code null})
      */
-    private void setIdentity(Element mol, String organism){
-        if(organism != null){
+    private void setIdentity(Element mol, String organism) {
+        if (organism != null) {
             Element identity = xmlDoc.createElement("identity");
             mol.appendChild(identity);
             Element name = xmlDoc.createElement("name");
@@ -104,19 +114,20 @@ public final class RnamlFileWriter extends XmlFileWriter {
     }
 
     /**
-     * aggiusta la stringa contenente la sequenza di ribonucleidi
-     * in modo da renderla più leggibile nel file xml
-     * @param sequence sequenza grezza
-     * @return sequenza raffinata
+     * Formats the nucleotide sequence string for better readability in the XML output,
+     * inserting line breaks and spaces at regular intervals.
+     *
+     * @param sequence the raw nucleotide sequence
+     * @return the formatted sequence string
      */
     private String sequenceStyle(String sequence) {
         String result = "\n        ";
         int count = 0;
-        for(char c : sequence.toCharArray()) {
-            if(count != 0) {
-                if(count % 60 == 0)
+        for (char c : sequence.toCharArray()) {
+            if (count != 0) {
+                if (count % 60 == 0)
                     result += "\n        ";
-                else if(count % 10 == 0)
+                else if (count % 10 == 0)
                     result += ' ';
             }
             result += c;
@@ -126,10 +137,11 @@ public final class RnamlFileWriter extends XmlFileWriter {
     }
 
     /**
-     * aggiunge una parte di una coppia di basi nella struttura secondaria
-     * @param base_pair elemento di partenza
-     * @param id id dell'elemento della coppia
-     * @param pos posizione dell'elemento
+     * Adds one side of a base pair annotation to the secondary structure.
+     *
+     * @param base_pair the parent base-pair element
+     * @param id        the tag name for this side (e.g., "base-id-5p" or "base-id-3p")
+     * @param pos       the nucleotide position
      */
     private void addBase(Element base_pair, String id, int pos) {
         Element base_p = xmlDoc.createElement(id);
@@ -137,9 +149,8 @@ public final class RnamlFileWriter extends XmlFileWriter {
         Element base_id = xmlDoc.createElement("base-id");
         base_p.appendChild(base_id);
         Element position = xmlDoc.createElement("position");
-        position.appendChild(xmlDoc.createTextNode(pos+""));
+        position.appendChild(xmlDoc.createTextNode(pos + ""));
         base_id.appendChild(position);
     }
-
 
 }

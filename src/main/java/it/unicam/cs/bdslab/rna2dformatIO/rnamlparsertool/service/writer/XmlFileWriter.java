@@ -13,20 +13,22 @@ import org.w3c.dom.*;
 import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.abstraction.RnaFileWriter;
 
 /**
- * Classe astratta per fornire i metodi utili all'estrapolazione
- * del document e il salvataggio in un formato basato sull'xml
+ * Abstract class providing utility methods for creating an XML document
+ * and saving data in an XML-based format.
+ *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public abstract class XmlFileWriter implements RnaFileWriter {
+
     /**
-     * Document su cui scrivere
+     * The XML document being built.
      */
     protected Document xmlDoc;
 
     /**
-     * Metodo per ottenere un nuovo documento
+     * Creates a new empty XML document.
      */
-    protected void createNewDocument(){
+    protected void createNewDocument() {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -37,12 +39,12 @@ public abstract class XmlFileWriter implements RnaFileWriter {
     }
 
     /**
-     * Metodo per salvare l'attuale documento
-     * in uno specifico path e tramite un dtd fornito tramite
-     * riferimento esterno
-     * @param path path di destinazione
-     * @param dtd path del file.dtd
-     * @return true se il salvataggio va a buon fine, false altrimenti
+     * Saves the current XML document to the specified path, associating it with
+     * an external DTD.
+     *
+     * @param path the destination file path
+     * @param dtd  the DTD file reference (e.g., "rnaml.dtd")
+     * @return {@code true} if the save operation succeeds, {@code false} otherwise
      */
     protected boolean save(String path, String dtd) {
         try {

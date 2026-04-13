@@ -14,47 +14,48 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
-
 /**
- * Controller Facade, centrale in questo tool
- * Mette insieme tutte le funzioni della libreria
- * Un ipotetico utilizzo esterno dovrà passare da qui
+ * Central Facade controller for this tool.
+ * Aggregates all the library functions.
+ * Any external usage should go through this class.
  *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public class RnaParserController {
 
     /**
-     * dati caricati pronti per essere scritti
+     * Loaded data ready to be written.
      */
     private RnaMolecule chains;
+
     /**
-     * costruttore di gestori di dati rna
+     * Builder for RNA data handlers.
      */
     private RnaHandlerBuilder builder;
+
     /**
-     * Nome del file caricato
+     * Name of the loaded file.
      */
     private String loadedPath;
+
     /**
-     * classe per la gestione di nomi di file imprevisti
+     * Class for handling unexpected file names.
      */
     private RnaFileNameHandler nameHandler;
 
     private TertiaryStructureWriter tertiaryWriter;
 
     /**
-     * Costruttore del controller
+     * Default constructor for the controller.
      */
     public RnaParserController() {
         this(new DefaultRnaHandlerBuilder());
     }
 
     /**
-     * Costruttore del controller con builder custom
+     * Constructor for the controller with a custom builder.
      *
-     * @param builder builder esteso con nuovi formati
+     * @param builder extended builder with new formats
      */
     public RnaParserController(RnaHandlerBuilder builder) {
         this.builder = builder;
@@ -63,10 +64,10 @@ public class RnaParserController {
     }
 
     /**
-     * Metodo per caricare i dati di un rna contenuti in un dati file
+     * Loads RNA data contained in the specified file.
      *
-     * @param path nome del file
-     * @return esito dell'operazione
+     * @param path file name
+     * @return result of the operation
      */
     public synchronized OperationResult loadRna(String path) {
         path = checkExt(path, false);
@@ -88,26 +89,26 @@ public class RnaParserController {
     }
 
     /**
-     * metodo per controllare se i dati sono attualmente stati caricati
+     * Checks whether data is currently loaded.
      *
-     * @return true se caricati, false altrimenti
+     * @return true if data is loaded, false otherwise
      */
     public boolean isLoaded() {
         return chains != null;
     }
 
     /**
-     * Metodo per cancellare i dati caricati
+     * Clears the loaded data.
      */
     public void clean() {
         this.chains = null;
     }
 
     /**
-     * Metodo per salvare i dati caricati in un dato file
+     * Saves the loaded data to the specified file.
      *
-     * @param path nome del file
-     * @return esito dell'operazione
+     * @param path file name
+     * @return result of the operation
      */
     public synchronized OperationResult SaveLoadedData(String path) {
         OperationResult result = new OperationResult();
@@ -117,7 +118,7 @@ public class RnaParserController {
         }
         var extension = path.substring(path.lastIndexOf('.') + 1);
         if (extension.equals("fasta")) {
-            return this.fastaTranslation(this.loadedPath,path);
+            return this.fastaTranslation(this.loadedPath, path);
         } else {
             path = checkExt(path, true);
             RnaFileWriter writer = this.builder.buildFileWriter(path);
@@ -134,25 +135,36 @@ public class RnaParserController {
     }
 
     /**
-     * Metodo che fa uso nel nameHandler
+     * Ensures the file path has a supported extension.
+     * Uses the internal name handler to validate or append the default extension.
      *
-     * @param path    path da controllare
-     * @param newFile true se è un nuovo file
-     * @return path sicuro
+     * @param path    path to check
+     * @param newFile true if it is a new file (to be created/overwritten)
+     * @return a safe path with a valid extension
      */
     public String checkExt(String path, boolean newFile) {
         return this.nameHandler.checkExt(this.builder.getSupportedExtensions(), this.builder.getDefaultExtension(), path, newFile);
     }
 
+    /**
+     * Returns the builder used by this controller.
+     *
+     * @return the current {@link RnaHandlerBuilder} instance
+     */
     public RnaHandlerBuilder getBuilder() {
         return builder;
     }
 
+    /**
+     * Returns the path of the currently loaded file.
+     *
+     * @return the loaded file path, or null if none
+     */
     public String getLoadedPath() {
         return loadedPath;
     }
 
-    private OperationResult fastaTranslation(String input,String output) {
+    private OperationResult fastaTranslation(String input, String output) {
         var r = new OperationResult();
         try {
             var in = Path.of(input);

@@ -1,10 +1,9 @@
 package it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model;
 
 /**
- * classe che contiene una coppia di posizioni
- * unita ad un livello di ordine, indispensabile
- * per l'applicazione dell'algoritmo di scrittura
- * di file db
+ * Class that holds a pair of positions along with an order level.
+ * This is essential for the application of the DB file writing algorithm.
+ *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public class DbPair implements Comparable<DbPair> {
@@ -13,24 +12,50 @@ public class DbPair implements Comparable<DbPair> {
     private final int right;
     private int order;
 
-    public DbPair(int left, int right){
+    /**
+     * Constructs a DbPair with the specified left and right positions.
+     *
+     * @param left  the left position index
+     * @param right the right position index
+     */
+    public DbPair(int left, int right) {
         this.left = left;
         this.right = right;
         this.order = 0;
     }
 
+    /**
+     * Returns the left position index.
+     *
+     * @return the left position
+     */
     public int getLeft() {
         return left;
     }
 
+    /**
+     * Returns the right position index.
+     *
+     * @return the right position
+     */
     public int getRight() {
         return right;
     }
 
+    /**
+     * Returns the order level assigned to this pair.
+     *
+     * @return the order value
+     */
     public int getOrder() {
         return order;
     }
 
+    /**
+     * Sets the order level for this pair.
+     *
+     * @param order the order value to assign
+     */
     public void setOrder(int order) {
         this.order = order;
     }

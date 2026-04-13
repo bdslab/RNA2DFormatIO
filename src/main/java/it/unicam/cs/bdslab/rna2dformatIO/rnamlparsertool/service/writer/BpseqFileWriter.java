@@ -6,12 +6,19 @@ import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model.RnaMolecule;
 import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model.RnaChain;
 
 /**
- * Classe per scrivere dai dati in formato BPSEQ
+ * Class responsible for writing data in BPSEQ format.
  *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public final class BpseqFileWriter extends TextFileWriter {
 
+    /**
+     * Writes the given RNA molecule data to the specified file in BPSEQ format.
+     *
+     * @param chains the RNA molecule containing the data to write
+     * @param path   the destination file path
+     * @return {@code true} if the file was successfully written, {@code false} otherwise
+     */
     @Override
     public boolean writeAndSave(RnaMolecule chains, String path) {
         data = "";
@@ -21,9 +28,9 @@ public final class BpseqFileWriter extends TextFileWriter {
     }
 
     /**
-     * Scrive i dati contenuti nella catena nel formato BPSEQ
+     * Appends the data of a single chain to the output buffer in BPSEQ format.
      *
-     * @param m catena da scrivere
+     * @param m the RNA chain to write
      */
     private void writechain(RnaChain m) {
         char[] array = m.getSequence().toCharArray();

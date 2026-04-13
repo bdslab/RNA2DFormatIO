@@ -3,18 +3,20 @@ package it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.abstraction;
 import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model.RnaMolecule;
 
 /**
- * classe con la responsabilità di salvare dei dati
- * su un dato file, da creare o sovrascrivere
+ * Class with the responsibility of saving data
+ * to a specified file, which may be created or overwritten.
+ *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public interface RnaFileWriter {
 
     /**
-     * Metodo per la scrittura di un nuovo file contenente le informazioni
-     * @param chains infomrazioni da scrivere
-     * @param path file in cui scriverle
-     * @return true se la scrittura del file è andata a buon fine, false, altrimenti
+     * Method for writing a new file containing the information.
+     *
+     * @param chains the information to be written
+     * @param path   the file in which to write the information
+     * @return true if the file writing was successful, false otherwise
      */
-    public boolean writeAndSave(RnaMolecule chains, String path);
+    boolean writeAndSave(RnaMolecule chains, String path);
 
 }

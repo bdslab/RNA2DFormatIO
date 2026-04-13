@@ -6,19 +6,19 @@ import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.service.loader.*;
 import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.service.writer.*;
 
 /**
- * Classe che genera il gestore adatto al contesto
- * in base al metodo chiamato e al nome del file
+ * Abstract class that produces the appropriate handler for a given context,
+ * based on the called method and the file extension.
  *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public abstract class RnaHandlerBuilder {
 
     /**
-     * Metodo per ottenere il giusto scrittore di
-     * dati per un certo path
+     * Returns the appropriate {@link RnaFileWriter} implementation for the
+     * specified file path, determined by its extension.
      *
-     * @param path path in cui salvare
-     * @return scrittore di dati adatto
+     * @param path the destination file path
+     * @return a suitable file writer instance
      */
     public final RnaFileWriter buildFileWriter(String path) {
         String extension = getExtension(path);
@@ -32,14 +32,21 @@ public abstract class RnaHandlerBuilder {
         };
     }
 
+    /**
+     * Hook method to handle unsupported or unrecognized file extensions
+     * when building a file writer. Subclasses may override to provide a fallback.
+     *
+     * @param path the destination file path
+     * @return a fallback file writer (default may be {@link NullFileWriter})
+     */
     protected abstract RnaFileWriter buildUnexpectedFileWriter(String path);
 
     /**
-     * Metodo per ottenere il giusto caricatore di
-     * dati per un certo path
+     * Returns the appropriate {@link RnaDataLoader} implementation for the
+     * specified file path, determined by its extension.
      *
-     * @param path path da caricare
-     * @return caricatore di dati adatto
+     * @param path the source file path to load
+     * @return a suitable data loader instance
      */
     public final RnaDataLoader buildDataLoader(String path) {
         String extension = getExtension(path);
@@ -53,14 +60,20 @@ public abstract class RnaHandlerBuilder {
         };
     }
 
-
+    /**
+     * Hook method to handle unsupported or unrecognized file extensions
+     * when building a data loader. Subclasses may override to provide a fallback.
+     *
+     * @param path the source file path to load
+     * @return a fallback data loader (default may be {@link NullDataLoader})
+     */
     protected abstract RnaDataLoader buildUnexpectedDataLoader(String path);
 
     /**
-     * Metodo interno per ottenere l'estensione del file
+     * Internal utility to extract the file extension from a path.
      *
-     * @param path nome del file
-     * @return estensione del file
+     * @param path the file path
+     * @return the lowercased extension, or an empty string if none exists
      */
     private String getExtension(String path) {
         String[] parts = path.split("\\.");
@@ -72,9 +85,19 @@ public abstract class RnaHandlerBuilder {
         return ext;
     }
 
+    /**
+     * Returns the list of file extensions supported by this builder.
+     *
+     * @return an array of supported extensions (e.g., {"db", "bpseq", "ct", "aas", "rnaml"})
+     */
     public abstract String[] getSupportedExtensions();
 
+    /**
+     * Returns the default extension to be used when none is provided or
+     * when the provided extension is not recognized.
+     *
+     * @return the default file extension (e.g., "db")
+     */
     public abstract String getDefaultExtension();
-
 
 }

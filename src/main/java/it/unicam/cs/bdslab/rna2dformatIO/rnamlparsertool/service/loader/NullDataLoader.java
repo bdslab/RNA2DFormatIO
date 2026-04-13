@@ -4,12 +4,19 @@ import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.abstraction.RnaDataLoad
 import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model.RnaMolecule;
 
 /**
- * Classe simbolica che indica che non è stato trovato
- * un caricatore di dati adeguato per il formato indicato
+ * A symbolic class indicating that no suitable data loader
+ * was found for the specified format.
+ *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public final class NullDataLoader implements RnaDataLoader {
 
+    /**
+     * Always returns {@code null}, as no data can be loaded.
+     *
+     * @param path the file path (ignored)
+     * @return {@code null}
+     */
     @Override
     public RnaMolecule getData(String path) {
         return null;

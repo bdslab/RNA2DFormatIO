@@ -8,20 +8,24 @@ import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.abstraction.RnaFileWrit
 import it.unicam.cs.bdslab.rna2dformatIO.rnamlparsertool.model.RnaMolecule;
 
 /**
- * Classe astratta con metodi di servizio utili
- * a scrivere nei formati simili a testo
+ * Abstract class providing utility methods for writing data
+ * in plain-text-like formats.
+ *
  * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public abstract class TextFileWriter implements RnaFileWriter {
 
+    /**
+     * Buffer that accumulates the data to be written to the file.
+     */
     protected String data = "";
 
     /**
-     * Metodo per salvare i dati precedentemente inseriti
-     * in un dato path, sovrascrivendo eventualmente precedenti
-     * dati allo stessto path
-     * @param path path di destinazione
-     * @return true se l'opezione va a buon fine, false altrimenti
+     * Saves the previously accumulated data to the specified file path,
+     * overwriting any existing content at that location.
+     *
+     * @param path the destination file path
+     * @return {@code true} if the operation succeeds, {@code false} otherwise
      */
     protected boolean save(String path) {
         try {
@@ -36,21 +40,21 @@ public abstract class TextFileWriter implements RnaFileWriter {
     }
 
     /**
-     * Metodo per scrivere nei dati delle informazioni
-     * opzionali dell'rna, se presenti
-     * @param rnaData dato dell'rna
+     * Appends optional RNA metadata to the output buffer, if present.
+     * This includes organism name, accession number, and reference link.
+     *
+     * @param rnaData the RNA molecule containing the metadata
      */
     protected void setFileInfo(RnaMolecule rnaData) {
-        if(rnaData.getOrganism() != null) {
+        if (rnaData.getOrganism() != null) {
             data += "# Organism: " + rnaData.getOrganism() + "\n";
         }
-        if(rnaData.getAccessionNumber() != null) {
+        if (rnaData.getAccessionNumber() != null) {
             data += "# Accession Number: " + rnaData.getAccessionNumber() + "\n";
         }
-        if(rnaData.getReferenceLink() != null) {
+        if (rnaData.getReferenceLink() != null) {
             data += "# Citation and related information available at " + rnaData.getReferenceLink() + "\n";
         }
     }
-
 
 }
