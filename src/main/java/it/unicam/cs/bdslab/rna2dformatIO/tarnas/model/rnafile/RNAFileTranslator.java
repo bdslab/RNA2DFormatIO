@@ -9,8 +9,8 @@ import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat.*
 
 /**
  * A representation of an RNA files translator.<br>
- * This class consists exclusively of static methods that operate on RNA secondary structure formats translations.<br>
- * Every static method has only a {@link RNAFile} parameter and translate it to the {@link RNAFormat} destination.<br>
+ * This class consists exclusively of static methods that operate on RNA secondary structure format translations.<br>
+ * Every static method has only an {@link RNAFile} parameter and translates it to the destination {@link RNAFormat}.<br>
  * The output of every static method is a {@link RNAFile}.
  *
  * @author Piero Hierro, Piermichele Rosati
@@ -20,10 +20,10 @@ import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat.*
 public class RNAFileTranslator {
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#DB} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to an {@link RNAFile} with {@link RNAFormat#DB} format.
      *
-     * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#DB} format.
-     * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#DB} format
+     * @param rnaFile the {@code RNAFile} to translate to the {@link RNAFormat#DB} format
+     * @return the translated {@code RNAFile} in {@link RNAFormat#DB} format
      */
     public static RNAFile translateToDB(RNAFile rnaFile) {
         // create DB header
@@ -35,10 +35,10 @@ public class RNAFileTranslator {
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#DB_NO_SEQUENCE} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to an {@link RNAFile} with {@link RNAFormat#DB_NO_SEQUENCE} format.
      *
-     * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#DB_NO_SEQUENCE} format.
-     * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#DB_NO_SEQUENCE} format
+     * @param rnaFile the {@code RNAFile} to translate to the {@link RNAFormat#DB_NO_SEQUENCE} format
+     * @return the translated {@code RNAFile} in {@link RNAFormat#DB_NO_SEQUENCE} format
      */
     public static RNAFile translateToDBNoSequence(RNAFile rnaFile) {
         // create DB no sequence header
@@ -50,10 +50,10 @@ public class RNAFileTranslator {
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#BPSEQ} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to an {@link RNAFile} with {@link RNAFormat#BPSEQ} format.
      *
-     * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#BPSEQ} format.
-     * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#BPSEQ} format
+     * @param rnaFile the {@code RNAFile} to translate to the {@link RNAFormat#BPSEQ} format
+     * @return the translated {@code RNAFile} in {@link RNAFormat#BPSEQ} format
      */
     public static RNAFile translateToBPSEQ(RNAFile rnaFile) {
         // create BPSEQ header
@@ -65,10 +65,10 @@ public class RNAFileTranslator {
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#CT} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to an {@link RNAFile} with {@link RNAFormat#CT} format.
      *
-     * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#CT} format.
-     * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#CT} format
+     * @param rnaFile the {@code RNAFile} to translate to the {@link RNAFormat#CT} format
+     * @return the translated {@code RNAFile} in {@link RNAFormat#CT} format
      */
     public static RNAFile translateToCT(RNAFile rnaFile) {
         // create CT header
@@ -80,10 +80,10 @@ public class RNAFileTranslator {
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#AAS} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to an {@link RNAFile} with {@link RNAFormat#AAS} format.
      *
-     * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#AAS} format.
-     * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#AAS} format
+     * @param rnaFile the {@code RNAFile} to translate to the {@link RNAFormat#AAS} format
+     * @return the translated {@code RNAFile} in {@link RNAFormat#AAS} format
      */
     public static RNAFile translateToAAS(RNAFile rnaFile) {
         // create AAS header
@@ -95,10 +95,10 @@ public class RNAFileTranslator {
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#AAS_NO_SEQUENCE} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to an {@link RNAFile} with {@link RNAFormat#AAS_NO_SEQUENCE} format.
      *
-     * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#AAS_NO_SEQUENCE} format.
-     * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#AAS_NO_SEQUENCE} format
+     * @param rnaFile the {@code RNAFile} to translate to the {@link RNAFormat#AAS_NO_SEQUENCE} format
+     * @return the translated {@code RNAFile} in {@link RNAFormat#AAS_NO_SEQUENCE} format
      */
     public static RNAFile translateToAASNoSequence(RNAFile rnaFile) {
         // create ASS no sequence header
@@ -113,10 +113,10 @@ public class RNAFileTranslator {
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#FASTA} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to an {@link RNAFile} with {@link RNAFormat#FASTA} format.
      *
-     * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#FASTA} format.
-     * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#FASTA} format
+     * @param rnaFile the {@code RNAFile} to translate to the {@link RNAFormat#FASTA} format
+     * @return the translated {@code RNAFile} in {@link RNAFormat#FASTA} format
      */
     public static RNAFile translateToFASTA(RNAFile rnaFile) {
         var rnaSecondaryStructure = rnaFile.getStructure();
@@ -132,10 +132,10 @@ public class RNAFileTranslator {
 
     /**
      * Creates the {@link RNAFormat#DB} body for the specified {@code rnaSecondaryStructure}.
-     * If {@code addSequence} parameter is true, adds the sequence to the body.
+     * If {@code addSequence} is {@code true}, adds the sequence to the body.
      *
-     * @param rnaSecondaryStructure the {@link RNASecondaryStructure} from which create the {@link RNAFormat#DB} body.
-     * @param addSequence           boolean flag to add the sequence to the {@link RNAFormat#DB} body
+     * @param rnaSecondaryStructure the {@link RNASecondaryStructure} from which to create the body
+     * @param addSequence           whether to include the nucleotide sequence
      * @return the {@link RNAFormat#DB} body as a {@link List} of {@code String}
      */
     private static List<String> createDBBody(RNASecondaryStructure rnaSecondaryStructure, boolean addSequence) {
@@ -151,10 +151,10 @@ public class RNAFileTranslator {
 
     /**
      * Creates the {@link RNAFormat#AAS} body for the specified {@code rnaSecondaryStructure}.
-     * If {@code addSequence} parameter is true, adds the sequence to the body.
+     * If {@code addSequence} is {@code true}, adds the sequence to the body.
      *
-     * @param rnaSecondaryStructure the {@link RNASecondaryStructure} from which create the {@link RNAFormat#AAS} body.
-     * @param addSequence           boolean flag to add the sequence to the {@link RNAFormat#AAS} body
+     * @param rnaSecondaryStructure the {@link RNASecondaryStructure} from which to create the body
+     * @param addSequence           whether to include the nucleotide sequence
      * @return the {@link RNAFormat#AAS} body as a {@link List} of {@code String}
      */
     private static List<String> createAASBody(RNASecondaryStructure rnaSecondaryStructure, boolean addSequence) {
@@ -176,7 +176,7 @@ public class RNAFileTranslator {
     /**
      * Creates the {@link RNAFormat#BPSEQ} body for the specified {@code rnaSecondaryStructure}.
      *
-     * @param rnaSecondaryStructure the {@link RNASecondaryStructure} from which create the {@link RNAFormat#BPSEQ} body.
+     * @param rnaSecondaryStructure the {@link RNASecondaryStructure} from which to create the body
      * @return the {@link RNAFormat#BPSEQ} body as a {@link List} of {@code String}
      */
     private static List<String> createBPSEQBody(RNASecondaryStructure rnaSecondaryStructure) {
@@ -194,7 +194,7 @@ public class RNAFileTranslator {
     /**
      * Creates the {@link RNAFormat#CT} body for the specified {@code rnaSecondaryStructure}.
      *
-     * @param rnaSecondaryStructure the {@link RNASecondaryStructure} from which create the {@link RNAFormat#CT} body.
+     * @param rnaSecondaryStructure the {@link RNASecondaryStructure} from which to create the body
      * @return the {@link RNAFormat#CT} body as a {@link List} of {@code String}
      */
     private static List<String> createCTBody(RNASecondaryStructure rnaSecondaryStructure) {
@@ -211,12 +211,13 @@ public class RNAFileTranslator {
     }
 
     /**
-     * Creates the header for the file with destination {@link RNAFormat}.
-     * Reads every String in the {@code header} and adds the '#' symbol at the start of that header String.
+     * Creates the header for the file with the destination {@link RNAFormat}.
+     * Reads every string in the original {@code header} and prepends the '#' symbol
+     * if the destination format expects comment lines.
      *
-     * @param header            the {@link List} of String of the starting header
+     * @param header            the original list of header strings
      * @param destinationFormat the destination {@code RNAFormat}
-     * @return the commented header for the file with the destination {@code RNAFormat}
+     * @return the adjusted header for the destination format
      */
     private static List<String> createHeader(List<String> header, RNAFormat destinationFormat) {
         var newHeader = new ArrayList<String>();
@@ -241,12 +242,21 @@ public class RNAFileTranslator {
         return newHeader;
     }
 
+    /**
+     * Extracts all paired regions (weak bonds) from the given secondary structure.
+     *
+     * @param rnaSecondaryStructure the secondary structure to analyze
+     * @return a list of {@link Region} objects, one per weak bond
+     */
     private static List<Region> findAllPairedRegions(RNASecondaryStructure rnaSecondaryStructure) {
         return rnaSecondaryStructure.getBonds().stream().map(Region::new).toList();
     }
 
     /**
-     * @param regs
+     * Sorts a list of regions by their start (left) position.
+     *
+     * @param regs the list of regions to sort
+     * @return a new list sorted by left position
      */
     private static List<Region> sortRegionsByStartPoint(List<Region> regs) {
         var tmp = new ArrayList<>(regs);
@@ -255,8 +265,11 @@ public class RNAFileTranslator {
     }
 
     /**
-     * @param regs
-     * @param n
+     * Assigns an order (nesting level) to each region, resolving conflicts for
+     * pseudoknot representation.
+     *
+     * @param regs the list of regions (must be sorted by start point)
+     * @param n    the number of regions
      */
     private static void setRegionsOrder(List<Region> regs, int n) {
         if (n < 2) return;
@@ -273,6 +286,13 @@ public class RNAFileTranslator {
         }
     }
 
+    /**
+     * Determines whether two regions (base pairs) conflict (i.e., form a pseudoknot).
+     *
+     * @param r1 the first region
+     * @param r2 the second region
+     * @return {@code true} if the regions conflict, {@code false} otherwise
+     */
     private static boolean areRegionsConflicting(Region r1, Region r2) {
         var wb1 = r1.getWeakBond();
         var wb2 = r2.getWeakBond();
@@ -283,6 +303,14 @@ public class RNAFileTranslator {
         return firstCase || secondCase;
     }
 
+    /**
+     * Encodes the base pairs into an Extended Dot-Bracket Notation string
+     * using the assigned orders.
+     *
+     * @param regs the list of regions with assigned orders
+     * @param size the total length of the structure
+     * @return the encoded dot-bracket string
+     */
     private static String encodeBasePairs(List<Region> regs, int size) {
         var structure = new StringBuilder();
         structure.append(".".repeat(size));
@@ -293,6 +321,13 @@ public class RNAFileTranslator {
         return structure.toString();
     }
 
+    /**
+     * Returns the opening bracket character corresponding to the given order.
+     *
+     * @param order the nesting order (0-8)
+     * @return the opening bracket character
+     * @throws IllegalArgumentException if the order is greater than 8
+     */
     private static Character getOpeningBracket(int order) {
         return switch (order) {
             case 0 -> '(';
@@ -308,6 +343,13 @@ public class RNAFileTranslator {
         };
     }
 
+    /**
+     * Returns the closing bracket character corresponding to the given order.
+     *
+     * @param order the nesting order (0-8)
+     * @return the closing bracket character
+     * @throws IllegalArgumentException if the order is greater than 8
+     */
     private static Character getClosingBracket(int order) {
         return switch (order) {
             case 0 -> ')';
@@ -323,9 +365,15 @@ public class RNAFileTranslator {
         };
     }
 
+    /**
+     * Replaces the extension of the given file name with the destination extension.
+     *
+     * @param fileName      the original file name
+     * @param dstExtension  the new extension (without leading dot)
+     * @return the file name with the new extension
+     */
     private static String getFileNameWithDstExtension(String fileName, String dstExtension) {
         return fileName.substring(0, fileName.lastIndexOf('.') + 1) + dstExtension;
     }
-
 
 }

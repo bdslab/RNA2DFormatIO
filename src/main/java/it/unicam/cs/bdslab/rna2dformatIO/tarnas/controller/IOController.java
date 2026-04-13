@@ -17,8 +17,10 @@ import java.util.zip.ZipOutputStream;
 import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.utils.RNAStatisticsCalculator.*;
 
 /**
- * Singleton controller for loading, saving, and packaging RNA files.
- * Exceptions are propagated upwards.
+ * Singleton controller responsible for loading, saving, and packaging RNA files.
+ * All I/O operations are centralized here, and exceptions are propagated to the caller.
+ *
+ * @author Marvin Sincini - Università di Informatica di Camerino - matricola 118311
  */
 public class IOController {
 
@@ -30,30 +32,51 @@ public class IOController {
         this.loadedRNAFiles = new ArrayList<>();
     }
 
+    /**
+     * Returns the singleton instance of the controller.
+     *
+     * @return the unique {@code IOController} instance
+     */
     public static IOController getInstance() {
         return instance;
     }
 
     /**
-     * Returns an unmodifiable list of currently loaded RNA files.
+     * Returns an unmodifiable list of the currently loaded RNA files.
+     *
+     * @return a list of loaded {@link RNAFile} objects
      */
     public List<RNAFile> getLoadedRNAFiles() {
         return List.copyOf(loadedRNAFiles);
     }
 
+    /**
+     * Returns the RNA format recognized from the loaded files.
+     *
+     * @return the {@link RNAFormat} of the loaded files, or {@code null} if none are loaded
+     */
     public RNAFormat getRecognizedFormat() {
         return recognizedFormat;
     }
 
     /**
-     * Builds an {@link RNAFile} from the given path.
+     * Builds an {@link RNAFile} instance from the file at the specified path.
+     *
+     * @param srcFilePath path to the source RNA file
+     * @return the constructed {@code RNAFile}
+     * @throws IOException if an I/O error occurs during reading or parsing
      */
     public RNAFile getRNAFileOf(Path srcFilePath) throws IOException {
         return RNAFileConstructor.getInstance().construct(srcFilePath);
     }
 
     /**
-     * Loads a single RNA file and checks format consistency with any already-loaded files.
+     * Loads a single RNA file and ensures format consistency with any previously loaded files.
+     *
+     * @param srcFilePath path to the RNA file to load
+     * @return the loaded {@link RNAFile}
+     * @throws IOException              if an I/O error occurs during loading
+     * @throws IllegalArgumentException if the format of the new file differs from already loaded files
      */
     public RNAFile loadFile(Path srcFilePath) throws IOException {
         var rnaFile = getRNAFileOf(srcFilePath);
@@ -72,7 +95,11 @@ public class IOController {
     }
 
     /**
-     * Loads all regular files from a directory.
+     * Loads all regular files from a directory, ignoring hidden files and files within
+     * directories whose names contain a dot.
+     *
+     * @param srcDirectoryPath path to the directory to load
+     * @throws IOException if an I/O error occurs while traversing the directory
      */
     public void loadDirectory(Path srcDirectoryPath) throws IOException {
         try (var directoryStream = Files.newDirectoryStream(srcDirectoryPath)) {
@@ -88,7 +115,17 @@ public class IOController {
     }
 
     /**
-     * Saves and optionally processes RNA files, generates statistics, and zips the result.
+     * Saves a list of RNA files to the specified destination directory, optionally generates
+     * non-canonical pair data and sequence statistics, and creates a ZIP archive of all
+     * generated files.
+     *
+     * @param files                     the RNA files to save
+     * @param dstPath                   destination directory for the generated files
+     * @param generateNonCanonicalPairs whether to include non-canonical pair CSV files
+     * @param generateStatistics        whether to generate sequence statistics CSV files
+     * @param zipFileName               base name for the output ZIP file (without extension);
+     *                                  if blank, no ZIP is created
+     * @throws IOException if an I/O error occurs during file writing or zipping
      */
     public void saveFiles(List<RNAFile> files,
                           Path dstPath,
@@ -117,8 +154,9 @@ public class IOController {
     }
 
     /**
-     * If {@code generateNonCanonicalPairs} is true, updates *.csv files in the current dir.
-     * Otherwise, deletes them.
+     * Processes non-canonical pair CSV files generated in the current working directory.
+     * If requested, they are renamed and moved to the destination directory with "_nc" suffix
+     * and their content is adjusted (spaces replaced with commas). Otherwise, they are deleted.
      */
     private void processNonCanonicalPairs(boolean generateNonCanonicalPairs,
                                           Path dstPath,
@@ -197,6 +235,12 @@ public class IOController {
         }
     }
 
+    /**
+     * Removes the specified RNA file from the list of loaded files.
+     * If no files remain loaded, the recognized format is reset to {@code null}.
+     *
+     * @param rnaFile the file to remove
+     */
     public void deleteFile(RNAFile rnaFile) {
         loadedRNAFiles.remove(rnaFile);
         if (loadedRNAFiles.isEmpty()) {
@@ -204,6 +248,9 @@ public class IOController {
         }
     }
 
+    /**
+     * Clears all loaded RNA files and resets the recognized format.
+     */
     public void clearAllDataStructures() {
         loadedRNAFiles.clear();
         recognizedFormat = null;

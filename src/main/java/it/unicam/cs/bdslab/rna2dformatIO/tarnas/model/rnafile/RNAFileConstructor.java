@@ -12,6 +12,12 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.IOException;
 import java.nio.file.Path;
 
+/**
+ * Singleton responsible for constructing {@link RNAFile} instances from input files
+ * using the ANTLR-generated parser for RNA secondary structure formats.
+ *
+ * @author Piero Hierro, Piermichele Rosati
+ */
 public class RNAFileConstructor {
 
     private static RNAFileConstructor instance;
@@ -19,7 +25,7 @@ public class RNAFileConstructor {
     private final RNAFileListener rnaFilelistener;
 
     /**
-     * Invisible constructor.
+     * Private constructor to prevent direct instantiation.
      */
     private RNAFileConstructor() {
         // Create a generic parse tree walker that can trigger callbacks
@@ -29,9 +35,9 @@ public class RNAFileConstructor {
     }
 
     /**
-     * Factory method for the obtaining the {@link RNAFileConstructor} instance.
+     * Factory method to obtain the singleton {@link RNAFileConstructor} instance.
      *
-     * @return the instance of this Singleton
+     * @return the unique instance of this constructor
      */
     public static RNAFileConstructor getInstance() {
         if (instance == null)
@@ -39,6 +45,13 @@ public class RNAFileConstructor {
         return instance;
     }
 
+    /**
+     * Parses the specified file and builds the corresponding {@link RNAFile}.
+     *
+     * @param filePath path to the RNA file to parse
+     * @return an {@code RNAFile} instance containing the parsed content
+     * @throws IOException if an I/O error occurs while reading the file
+     */
     public RNAFile construct(Path filePath) throws IOException {
         CharStream input = CharStreams.fromFileName(String.valueOf(filePath));
         // create a lexer that feeds off of input CharStream

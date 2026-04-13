@@ -109,7 +109,7 @@ public class RNAStatisticsCalculator {
      * Returns the number of non-canonical pairs in the RNA file.
      *
      * @param format the RNA file format
-     * @return the number of non-canonical pairs in the RNA file
+     * @return {@code true} if sequence data is available, {@code false} otherwise
      */
     private static boolean checkSequence(RNAFormat format) {
         return !(format.equals(RNAFormat.RNAML) || format.equals(RNAFormat.DB_NO_SEQUENCE) || format.equals(RNAFormat.AAS_NO_SEQUENCE) || format.equals(RNAFormat.FASTA));
@@ -162,18 +162,6 @@ public class RNAStatisticsCalculator {
         var sequence = rnaFile.getStructure().getSequence();
         return (sequence.charAt(bond.getLeft() - 1) == nucleotide1 && sequence.charAt(bond.getRight() - 1) == nucleotide2) ||
                 (sequence.charAt(bond.getLeft() - 1) == nucleotide2 && sequence.charAt(bond.getRight() - 1) == nucleotide1);
-    }
-
-    /**
-     * Returns the number of non-canonical pairs in the RNA file.
-     *
-     * @param rnaFile the RNA file
-     * @return the number of non-canonical pairs in the RNA file
-     */
-    public static int getNonCanonicalPairs(RNAFile rnaFile) {
-        return getBondsOf(bond -> !isBondBetween('G', 'C', bond, rnaFile) &&
-                !isBondBetween('A', 'U', bond, rnaFile) &&
-                !isBondBetween('G', 'U', bond, rnaFile), rnaFile);
     }
 
 }

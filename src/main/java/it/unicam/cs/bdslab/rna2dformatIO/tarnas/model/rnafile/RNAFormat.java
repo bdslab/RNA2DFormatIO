@@ -1,7 +1,5 @@
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile;
 
-// TODO: javadoc for RNAML
-
 /**
  * An RNAFormat can be:
  * <ul>
@@ -101,10 +99,20 @@ public enum RNAFormat {
         this.name = name;
     }
 
+    /**
+     * Returns the human-readable name of this format.
+     *
+     * @return the format name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the canonical file extension associated with this format.
+     *
+     * @return the file extension (e.g., "aas", "bpseq", "db")
+     */
     public String getExtension() {
         return switch (this) {
             case AAS, AAS_NO_SEQUENCE -> "aas";

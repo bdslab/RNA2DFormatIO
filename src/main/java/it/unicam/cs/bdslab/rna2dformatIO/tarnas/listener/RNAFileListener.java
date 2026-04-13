@@ -1,6 +1,5 @@
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.listener;
 
-
 import it.unicam.cs.bdslab.RNASecondaryStructureBaseListener;
 import it.unicam.cs.bdslab.RNASecondaryStructureParser;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFile;
@@ -13,15 +12,23 @@ import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.WeakBond;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.jsoup.Jsoup;
 
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+/**
+ * ANTLR listener that builds an {@link RNAFile} while traversing the parse tree
+ * of an RNA secondary structure file.
+ * <p>
+ * This listener extracts the header, body, sequence, secondary structure bonds,
+ * and (for RNAML) non-canonical edge families. After parsing, the constructed
+ * {@code RNAFile} can be retrieved via {@link #getRnaFile()}.
+ * </p>
+ */
 public class RNAFileListener extends RNASecondaryStructureBaseListener {
+
     private RNAFile rnaFile;
     private RNASecondaryStructure s;
     private StringBuffer sequenceBuffer;
@@ -30,10 +37,19 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     private String fileName;
     private List<String> content;
 
+    /**
+     * Creates a new listener instance. The file to parse must be set via
+     * {@link #setFilePath(Path)} before starting the parse walk.
+     */
     public RNAFileListener() {
-
     }
 
+    /**
+     * Sets the path of the file to be parsed and initialises internal buffers.
+     *
+     * @param filePath path to the RNA file
+     * @throws IOException if an I/O error occurs while reading the file
+     */
     public void setFilePath(Path filePath) throws IOException {
         this.content = Files.readAllLines(filePath);
         this.s = new RNASecondaryStructure();
@@ -43,6 +59,12 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         this.fileName = String.valueOf(filePath.getFileName());
     }
 
+    /**
+     * Returns the {@link RNAFile} built during the parse walk and clears all
+     * internal data structures so that the listener is ready for the next file.
+     *
+     * @return the parsed {@code RNAFile}
+     */
     public RNAFile getRnaFile() {
         var rnaFile = this.rnaFile;
         this.clearDataStructures();
@@ -59,7 +81,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         this.content = null;
     }
 
-    //BPSEQ
+    // ---------------------------- BPSEQ ----------------------------
     @Override
     public void enterBpseq(RNASecondaryStructureParser.BpseqContext ctx) {
         if (ctx.COMMENT() != null) ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
@@ -73,38 +95,29 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void enterBpseqLineUnpaired(RNASecondaryStructureParser.BpseqLineUnpairedContext ctx) {
-        // add the current nucleotide to the sequence
         this.sequenceBuffer.append(ctx.NUCLEOTIDE().getText().trim());
     }
 
     @Override
     public void enterBpseqLineBond(RNASecondaryStructureParser.BpseqLineBondContext ctx) {
-        // add the current nucleotide to the sequence
         this.sequenceBuffer.append(ctx.NUCLEOTIDE().getText().trim());
-        // determines the indexes of this bond
         int left = Integer.parseInt(ctx.INDEX(0).getText());
         int right = Integer.parseInt(ctx.INDEX(1).getText());
         if (left < right) {
-            // only add the bond once, when it is first introduced
             this.s.addBond(new WeakBond(left, right));
         }
     }
 
     @Override
     public void exitBpseq(RNASecondaryStructureParser.BpseqContext ctx) {
-        // create body
         var body = this.content.subList(this.header.size(), this.content.size());
-        // assign the whole sequence to the RNASecondaryStructure
         this.s.setSequence(this.sequenceBuffer.toString());
-        // set the size of the structure to the length of the sequence
         this.s.setSize(this.s.getSequence().length());
-        // everything has been added to the structure, finalise it
         this.s.finalise();
-        // create rnafile object with unnecessary empty body
         this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, RNAFormat.BPSEQ);
     }
-    //CT
 
+    // ---------------------------- CT ----------------------------
     @Override
     public void enterCt(RNASecondaryStructureParser.CtContext ctx) {
         if (ctx.COMMENT() != null) ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
@@ -118,43 +131,33 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void enterCtLineUnpaired(RNASecondaryStructureParser.CtLineUnpairedContext ctx) {
-        // add the current nucleotide to the sequence
         this.sequenceBuffer.append(ctx.NUCLEOTIDE().getText().trim());
     }
 
     @Override
     public void enterCtLineBond(RNASecondaryStructureParser.CtLineBondContext ctx) {
-        // add the current nucleotide to the sequence
         this.sequenceBuffer.append(ctx.NUCLEOTIDE().getText().trim());
-        // determines the indexes of this bond
         int left = Integer.parseInt(ctx.INDEX(0).getText());
         int right = Integer.parseInt(ctx.getChild(4).getText());
         if (left < right) {
-            // only add the bond once, when it is first introduced
             this.s.addBond(new WeakBond(left, right));
         }
     }
 
     @Override
     public void exitCt(RNASecondaryStructureParser.CtContext ctx) {
-        // create body
         var body = this.content.subList(this.header.size(), this.content.size());
-        // assign the whole sequence to the RNASecondaryStructure
         this.s.setSequence(this.sequenceBuffer.toString());
-        // set the size of the structure to the length of the sequence
         this.s.setSize(this.s.getSequence().length());
-        // everything has been added to the structure, finalise it
         this.s.finalise();
-        // create rnafile object with unnecessary empty body
         this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, RNAFormat.CT);
     }
-    //AAS
 
+    // ---------------------------- AAS ----------------------------
     @Override
     public void enterAas(RNASecondaryStructureParser.AasContext ctx) {
         ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
     }
-
 
     @Override
     public void enterBonds(RNASecondaryStructureParser.BondsContext ctx) {
@@ -162,13 +165,11 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
             this.s.setSequence("");
             this.s.setSize(0);
         }
-        // take the bond and add it to the structure
         var indexes = this.getBondTokens(ctx.BOND().getText());
         int left = Integer.parseInt(indexes.get(0));
         int right = Integer.parseInt(indexes.get(1));
         this.s.addBond(new WeakBond(left, right));
     }
-
 
     private List<String> getBondTokens(String bondTokenText) {
         var separator = bondTokenText.contains(",") ? ',' : ';';
@@ -179,15 +180,13 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void exitAas(RNASecondaryStructureParser.AasContext ctx) {
-        // create body
         var body = this.content.subList(this.header.size(), this.content.size());
-        // everything has been added to the structure, finalise it
         this.s.finalise();
         // create rnafile object with unnecessary empty body
         this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, this.s.getSequence() == null ? RNAFormat.AAS_NO_SEQUENCE : RNAFormat.AAS);
     }
-    // FASTA
 
+    // ---------------------------- FASTA ----------------------------
     @Override
     public void enterFasta(RNASecondaryStructureParser.FastaContext ctx) {
         ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
@@ -195,26 +194,18 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void exitFasta(RNASecondaryStructureParser.FastaContext ctx) {
-        // create body
         var body = this.content.subList(this.header.size(), this.content.size());
-        // create rnafile object with unnecessary empty body
         this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, RNAFormat.FASTA);
     }
-    // EDBN
 
+    // ---------------------------- EDBN (Dot‑Bracket) ----------------------------
     @Override
     public void exitEdbn_structure(RNASecondaryStructureParser.Edbn_structureContext ctx) {
         var edbn = ctx.EDBN().stream().map(ParseTree::getText).toList();
         for (var e : edbn) {
-            /*
-             * Control if this part of string has been classified wrongly as EDBN
-             * while originally it was a nucleotide part with non-recognised
-             * codes; in this case throw an exception
-             */
+            // Check for mis-classified nucleotide sequences
             if (!e.contains(".")) {
-                // there are no dots, check if there is at least one bracket
                 if (!e.contains("(") && !e.contains(")") && !e.contains("[") && !e.contains("]") && !e.contains("{") && !e.contains("}")) {
-                    // there are no brackets, check if the string is very short
                     if (e.length() >= 5) {
                         // ok, it is not considered edbn, the exception is thrown
                         String m = "Line " + ctx.start.getLine() + " Character " + (ctx.start.getCharPositionInLine() + 1) + ": " + "unrecognised nucleotide code in " + e;
@@ -222,10 +213,6 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
                     }
                 }
             }
-            /*
-             * add this line of edbn to the already existing ones because of the
-             * right recursion of the parse tree
-             */
             this.edbnsBuffer.append(e);
         }
         if (this.s.getSize() == -1) {
@@ -253,42 +240,35 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     @Override
     public void exitEdbn(RNASecondaryStructureParser.EdbnContext ctx) {
         var bonds = parseEDBN(this.edbnsBuffer.toString());
-        // add all the bonds to the structure
         for (var wb : bonds)
             this.s.addBond(wb);
         this.s.finalise();
-        // create rnafile object
         if (Objects.equals(this.s.getSequence(), ""))
             this.rnaFile = new RNAFile(this.fileName, this.header, List.of(this.edbnsBuffer.toString()), this.s, RNAFormat.DB_NO_SEQUENCE);
         else
             this.rnaFile = new RNAFile(this.fileName, this.header, List.of(this.sequenceBuffer.toString(), this.edbnsBuffer.toString()), this.s, RNAFormat.DB);
     }
 
+    // ---------------------------- RNAML ----------------------------
     @Override
     public void exitRnamlContent(RNASecondaryStructureParser.RnamlContentContext ctx) {
         buildEdgeFamilies(this.s, ctx.XML_CONTENT().getText());
-        this.rnaFile = new RNAFile(this.fileName, this.header, List.of(ctx.XML_HEADER_LINE1().getText(), ctx.XML_HEADER_LINE2().getText(), ctx.XML_CONTENT().getText()), this.s, RNAFormat.RNAML);
+        this.rnaFile = new RNAFile(this.fileName, this.header,
+                List.of(ctx.XML_HEADER_LINE1().getText(), ctx.XML_HEADER_LINE2().getText(), ctx.XML_CONTENT().getText()),
+                this.s, RNAFormat.RNAML);
     }
 
-    /*
-     * Parse an Extended Dot-Bracket Notation string and transform it into a
-     * list of weak bonds.
+    // ---------------------------- EDBN parsing helpers ----------------------------
+    /**
+     * Parses an Extended Dot-Bracket Notation (EDBN) string and returns a list of weak bonds.
      *
-     * @param extendedDotBracketNotation the string of extended dot-bracket
-     * notation to convert
-     *
-     * @return a list of the bonds in the given extended dot-bracket notation
-     *
-     * @throws RNAInputFileParserException if the extended dot-bracket
-     * notation contains errors
+     * @param extendedDotBracketNotation the EDBN string to parse
+     * @return a list of {@link WeakBond} objects representing the base pairs
+     * @throws RNAInputFileParserException if the notation contains unbalanced brackets
+     *                                     or other syntax errors
      */
-
     private static List<WeakBond> parseEDBN(String extendedDotBracketNotation) {
         var bonds = new ArrayList<WeakBond>();
-        /*
-         * Parse the edbn string using stacks to push opening symbols and
-         * match them with closing ones
-         */
         var stacks = new HashMap<Character, Stack<Integer>>();
         for (int i = 0; i < extendedDotBracketNotation.length(); i++) {
             var c = extendedDotBracketNotation.charAt(i);
@@ -303,12 +283,9 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
                     throw new RNAInputFileParserException("Extended dot-bracket notation parsing: closing character at position " + (i + 1) + " does not have a corresponding opening character");
                 }
                 int leftPosition = stacks.get(opening).pop();
-                // add this weak bond to bonds
                 bonds.add(new WeakBond(leftPosition + 1, i + 1));
             }
-            // skip the "."
         }
-        // check mismatched closing symbols
         var ks = stacks.keySet();
         for (var c : ks)
             if (!stacks.get(c).isEmpty()) {
@@ -317,29 +294,16 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
                     msg.append(i + 1).append(" ");
                 throw new RNAInputFileParserException(msg.toString());
             }
-        // return
         return bonds;
     }
-    /*
-     * Determine if the given character is a correct opening character of an
-     * extended dot-bracket notation string.
-     */
 
     private static boolean isOpeningChar(char c) {
         return c == '(' || c == '[' || c == '{' || c == '<' || Character.isUpperCase(c);
     }
-    /*
-     * Determine if the given character is a correct closing character of an
-     * extended dot-bracket notation string.
-     */
 
     private static boolean isClosingChar(char c) {
         return c == ')' || c == ']' || c == '}' || c == '>' || Character.isLowerCase(c);
     }
-    /*
-     * Given a closing character of an extended dot-bracket notation string,
-     * returns the corresponding opening character.
-     */
 
     private static char getCorrespondingOpening(char c) {
         return switch (c) {
@@ -351,6 +315,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         };
     }
 
+    // ---------------------------- RNAML edge families ----------------------------
     private void buildEdgeFamilies(RNASecondaryStructure structure, String xmlContent) {
         var doc = Jsoup.parse(xmlContent, "", org.jsoup.parser.Parser.xmlParser());
         var sequence = doc.select("seq-data")
@@ -383,12 +348,10 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
                 var base_id_5p = String.valueOf(sequence.charAt(base_id_5p_index - 1));
                 var base_id_3p = String.valueOf(sequence.charAt(base_id_3p_index - 1));
 
-                // Prepare EdgeFamily values
                 var bond_type_1 = NonCanonicalEdgeFamilyValues.fromShortLabel(bond_type1_value);
                 var bond_type_2 = NonCanonicalEdgeFamilyValues.fromShortLabel(bond_type2_value);
                 var bondOrientation = NonCanonicalEdgeFamilyValues.fromShortLabel(bondOrientation_value);
 
-                // Create and add the new EdgeFamily
                 var edgeFamily = new NonCanonicalEdgeFamily(base_id_5p, base_id_5p_index, base_id_3p, base_id_3p_index,
                         bond_type_1, bond_type_2, bondOrientation);
                 edgeFamilies.add(edgeFamily);

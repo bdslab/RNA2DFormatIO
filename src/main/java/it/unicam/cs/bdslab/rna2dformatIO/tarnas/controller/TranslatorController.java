@@ -17,11 +17,13 @@ import java.util.stream.Stream;
 import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat.*;
 
 /**
- * An implementation of Translator Controller that accepts input from the {@link IOController} and converts that
- * input to commands for the Model or View.
- * This Controller takes care translation operations and file loading/saving/deleting and directory loading/saving.
- * In particular, it provides paralleled translation operations when multiple files are loaded, to have better performance.
- * Moreover, this Controller executes checking for I/O errors.
+ * An implementation of the Translator Controller that accepts input from the
+ * {@link IOController} and converts it to commands for the Model or View.
+ * <p>
+ * This controller handles translation operations as well as file and directory
+ * loading, saving, and deletion. It supports parallel translation when multiple
+ * files are loaded to improve performance, and it performs I/O error checking.
+ * </p>
  *
  * @author Piero Hierro, Piermichele Rosati
  * @see RNAFile
@@ -32,14 +34,13 @@ public class TranslatorController {
     private final static TranslatorController instance = new TranslatorController();
 
     /**
-     * This conversion matrix has the X {@link RNAFormat} as key-map and
-     * every key has the list of possible Y, Z, W destination {@code RNAFormat} to which convert X, as value-map.
+     * Conversion matrix that maps a source {@link RNAFormat} to the list of
+     * possible destination {@code RNAFormat}s to which it can be translated.
      */
     private final Map<RNAFormat, List<RNAFormat>> conversionMatrix;
 
     /**
-     * Creates a Translator Controller.
-     * It initializes the conversion matrix for translation operations.
+     * Creates the Translator Controller and initializes the conversion matrix.
      */
     private TranslatorController() {
         conversionMatrix = Map.of(
@@ -54,10 +55,10 @@ public class TranslatorController {
     }
 
     /**
-     * Return available translations from a {@link RNAFormat}
+     * Returns the list of formats to which a given source format can be translated.
      *
-     * @param rnaFormat an {@link RNAFormat}
-     * @return list of {@link RNAFormat}
+     * @param rnaFormat the source {@link RNAFormat}
+     * @return a list of possible destination {@code RNAFormat}s
      */
     public List<RNAFormat> getAvailableTranslations(RNAFormat rnaFormat) {
         return (rnaFormat == AAS || rnaFormat == DB)
@@ -68,31 +69,28 @@ public class TranslatorController {
     }
 
     /**
-     * Factory method for the obtaining the {@link TranslatorController} instance.
+     * Factory method to obtain the singleton instance of {@code TranslatorController}.
      *
-     * @return the instance of this Singleton
+     * @return the unique instance of this controller
      */
     public static TranslatorController getInstance() {
         return instance;
     }
 
     /**
-     * Translates all loaded files to the specified {@code dstRNAFormat}
+     * Translates the specified RNA file to the given destination format.
      *
-     * @param dstRNAFormat the destination {@link RNAFormat} to which translate all loaded files.
-     * @return the list of all translated loaded files
+     * @param file         the {@link RNAFile} to translate
+     * @param dstRNAFormat the destination {@link RNAFormat}
+     * @return a new {@code RNAFile} representing the translation of the input file
+     * @throws IOException if an I/O error occurs during translation or temporary file handling
      */
     public RNAFile translate(RNAFile file, RNAFormat dstRNAFormat) throws IOException {
         return translateTo(file, dstRNAFormat);
     }
 
     /**
-     * Translates the specified {@link RNAFile} to the specified {@code dstRNAFormat} and
-     * returns the {@link RNAFile} that represents the translated specified {@code rnaFile}.
-     *
-     * @param rnaFile      the {@code RNAFile} to translate to the specified {@code dstRNAFormat}.
-     * @param dstRNAFormat the destination {@link RNAFormat} to which translate the specified {@code rnaFile}
-     * @return the {@code FormattedRNAFile}, so the translation of the specified {@code rnaFile}
+     * Performs the actual translation from the source format to the destination format.
      */
     private RNAFile translateTo(RNAFile rnaFile, RNAFormat dstRNAFormat) throws IOException {
         RNAFormat srcFormat = rnaFile.getFormat();
@@ -111,6 +109,10 @@ public class TranslatorController {
         return formattedRNAFile;
     }
 
+    /**
+     * Handles translation involving the RNAML format by delegating to the
+     * external {@code RnaParserAnalyzerController}.
+     */
     private RNAFile handleRnamlTranslation(RNAFile rnaFile, String inputExtension, String outputExtension) throws IOException {
         Path inputFilePath = Path.of(rnaFile.getFileName().split("\\.")[0] + "." + inputExtension);
         Path outputFilePath = Path.of(rnaFile.getFileName().split("\\.")[0] + "." + outputExtension);
@@ -131,6 +133,7 @@ public class TranslatorController {
         try {
             return RNAFileConstructor.getInstance().construct(outputFilePath);
         } catch (Exception e) {
+            // Clean up any generated CSV files in the current directory
             for (Path file : Files.list(Paths.get(System.getProperty("user.dir"))).toList()) {
                 if (Files.isRegularFile(file) && file.toString().endsWith(".csv")) Files.delete(file);
             }
@@ -143,12 +146,12 @@ public class TranslatorController {
     }
 
     /**
-     * Useful method to translate an {@link RNAFile} to the specified {@code rnaFormat} without translation checking.
+     * Performs a direct translation to the specified format without any
+     * pre- or post-translation checks.
      *
-     * @param rnaFile   the {@code RNAFile} to translate.
+     * @param rnaFile   the {@code RNAFile} to translate
      * @param rnaFormat the destination {@link RNAFormat}
-     * @return the {@link RNAFile} that represent the translation of the specified {@code rnaFile}
-     * in the destination {@code rnaFormat}
+     * @return the translated {@code RNAFile}
      */
     private RNAFile noCheckingTranslateTo(RNAFile rnaFile, RNAFormat rnaFormat) {
         return switch (rnaFormat) {
