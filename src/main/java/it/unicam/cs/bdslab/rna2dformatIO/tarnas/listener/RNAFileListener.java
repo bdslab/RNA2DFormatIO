@@ -249,6 +249,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
             this.rnaFile = new RNAFile(this.fileName, this.header, List.of(this.sequenceBuffer.toString(), this.edbnsBuffer.toString()), this.s, RNAFormat.DB);
     }
 
+    /*
     // ---------------------------- RNAML ----------------------------
     @Override
     public void exitRnamlContent(RNASecondaryStructureParser.RnamlContentContext ctx) {
@@ -257,6 +258,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
                 List.of(ctx.XML_HEADER_LINE1().getText(), ctx.XML_HEADER_LINE2().getText(), ctx.XML_CONTENT().getText()),
                 this.s, RNAFormat.RNAML);
     }
+     */
 
     // ---------------------------- EDBN parsing helpers ----------------------------
     /**

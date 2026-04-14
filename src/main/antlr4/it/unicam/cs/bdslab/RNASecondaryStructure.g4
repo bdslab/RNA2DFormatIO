@@ -13,7 +13,7 @@
  *
  * Fasta format - with sequence of nucleotides
  *
- * @author Luca Tesei, Piero Hierro, Piermichele Rosati
+ * @author Luca Tesei, Piero Hierro, Piermichele Rosati, Francesco Palozzi
  *
  */
 grammar RNASecondaryStructure;
@@ -24,7 +24,7 @@ package it.unicam.cs.bdslab.tarnas.model.antlr;
 
 // Grammar rules
 rna_format:
-    aas | ct | edbn | bpseq | fasta | rnaml
+    aas | ct | edbn | bpseq | fasta /*| rnaml*/
 ;
 
 aas:
@@ -88,9 +88,9 @@ bpseq_line:
 	| INDEX NUCLEOTIDE INDEX # bpseqLineBond
 ;
 
-rnaml:
-    XML_HEADER_LINE1 XML_HEADER_LINE2 XML_CONTENT # rnamlContent
-;
+// rnaml:
+//     XML_HEADER_LINE1 XML_HEADER_LINE2 XML_CONTENT # rnamlContent
+// ;
 
 // Lexer tokens
 INDEX:

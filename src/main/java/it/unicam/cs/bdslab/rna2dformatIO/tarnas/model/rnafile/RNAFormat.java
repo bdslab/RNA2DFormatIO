@@ -77,7 +77,7 @@ package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile;
  *   <a href="https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/rna_structure_notations.html">RNAlib</a>,
  *   <a href="https://en.wikipedia.org/wiki/FASTA_format">Fasta on Wikipedia</a>
  * <p>
- *   @author Piero Hierro, Piermichele Rosati
+ *   @author Piero Hierro, Piermichele Rosati, Francesco Palozzi
  */
 public enum RNAFormat {
 
@@ -87,11 +87,7 @@ public enum RNAFormat {
     CT("CT"),
     DB("DOT BRACKET"),
     DB_NO_SEQUENCE("DOT BRACKET NO SEQUENCE"),
-    FASTA("FASTA"),
-    RNAML("RNAML"),
-    CORE("CORE"),
-    CORE_PLUS("CORE PLUS"),
-    SHAPE("SHAPE");
+    FASTA("FASTA");
 
     private final String name;
 
@@ -120,10 +116,6 @@ public enum RNAFormat {
             case CT -> "ct";
             case DB, DB_NO_SEQUENCE -> "db";
             case FASTA -> "fasta";
-            case RNAML -> "rnaml";
-            case CORE -> "core";
-            case CORE_PLUS -> "core_plus";
-            case SHAPE -> "shape";
         };
     }
 

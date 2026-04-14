@@ -144,7 +144,7 @@ public class IOController {
     private void saveFiles(List<RNAFile> files, Path dstPath, List<Path> generatedFiles) throws IOException {
         for (var file : files) {
             var baseFileName = file.getFileName().split("\\.")[0];
-            var extension = (file.getFormat() == RNAFormat.RNAML) ? ".xml" : "." + file.getFormat().getExtension() + ".txt";
+            var extension = "." + file.getFormat().getExtension() + ".txt";
             var fileName = baseFileName + extension;
             var destinationPath = dstPath.resolve(fileName);
 

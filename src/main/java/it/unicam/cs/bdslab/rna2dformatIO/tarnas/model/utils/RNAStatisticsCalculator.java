@@ -18,8 +18,6 @@ public class RNAStatisticsCalculator {
      * @return the number of nucleotides in the RNA file
      */
     public static int getNucleotideCount(RNAFile rnaFile) {
-        if (rnaFile.getFormat().equals(RNAFormat.RNAML))
-            return 0;
         return rnaFile.getStructure().getSize();
     }
 
@@ -30,8 +28,6 @@ public class RNAStatisticsCalculator {
      * @return the number of bonds in the RNA file
      */
     public static int getBondCount(RNAFile rnaFile) {
-        if (rnaFile.getFormat().equals(RNAFormat.RNAML))
-            return 0;
         return rnaFile.getStructure().getBonds().size();
     }
 
@@ -112,7 +108,7 @@ public class RNAStatisticsCalculator {
      * @return {@code true} if sequence data is available, {@code false} otherwise
      */
     private static boolean checkSequence(RNAFormat format) {
-        return !(format.equals(RNAFormat.RNAML) || format.equals(RNAFormat.DB_NO_SEQUENCE) || format.equals(RNAFormat.AAS_NO_SEQUENCE) || format.equals(RNAFormat.FASTA));
+        return !(format.equals(RNAFormat.DB_NO_SEQUENCE) || format.equals(RNAFormat.AAS_NO_SEQUENCE) || format.equals(RNAFormat.FASTA));
     }
 
     /**
