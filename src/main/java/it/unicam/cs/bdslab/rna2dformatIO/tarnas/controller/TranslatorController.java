@@ -25,7 +25,10 @@ import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat.*
  */
 public class TranslatorController {
 
-    private final static TranslatorController instance = new TranslatorController();
+    /**
+     * The singleton instance of the {@code TranslatorController}.
+     */
+    private static final TranslatorController instance = new TranslatorController();
 
     /**
      * Conversion matrix that maps a source {@link RNAFormat} to the list of

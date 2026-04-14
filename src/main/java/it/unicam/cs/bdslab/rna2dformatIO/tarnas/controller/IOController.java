@@ -24,10 +24,26 @@ import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.utils.RNAStatistics
  */
 public class IOController {
 
+    /**
+     * The single instance of this controller (singleton pattern).
+     */
     private static final IOController instance = new IOController();
-    private RNAFormat recognizedFormat;  // Tracks the format of loaded files
+
+    /**
+     * The RNA format shared by all currently loaded files.
+     * This field is {@code null} when no files are loaded.
+     */
+    private RNAFormat recognizedFormat;
+
+    /**
+     * The list of currently loaded RNA files.
+     */
     private final List<RNAFile> loadedRNAFiles;
 
+    /**
+     * Private constructor to enforce singleton pattern.
+     * Initializes the list of loaded RNA files.
+     */
     private IOController() {
         this.loadedRNAFiles = new ArrayList<>();
     }
@@ -141,6 +157,15 @@ public class IOController {
         createZipFile(dstPath, zipFileName, generatedFiles);
     }
 
+    /**
+     * Writes the content of the given RNA files to the destination directory
+     * and records the generated file paths.
+     *
+     * @param files          the RNA files to save
+     * @param dstPath        destination directory
+     * @param generatedFiles list to which the created file paths are added
+     * @throws IOException if an I/O error occurs during writing
+     */
     private void saveFiles(List<RNAFile> files, Path dstPath, List<Path> generatedFiles) throws IOException {
         for (var file : files) {
             var baseFileName = file.getFileName().split("\\.")[0];
@@ -157,6 +182,11 @@ public class IOController {
      * Processes non-canonical pair CSV files generated in the current working directory.
      * If requested, they are renamed and moved to the destination directory with "_nc" suffix
      * and their content is adjusted (spaces replaced with commas). Otherwise, they are deleted.
+     *
+     * @param generateNonCanonicalPairs whether to keep and transform the CSV files
+     * @param dstPath                   destination directory for the processed files
+     * @param generatedFiles            list to which the processed file paths are added
+     * @throws IOException if an I/O error occurs during file operations
      */
     private void processNonCanonicalPairs(boolean generateNonCanonicalPairs,
                                           Path dstPath,
@@ -189,6 +219,16 @@ public class IOController {
         }
     }
 
+    /**
+     * Generates sequence statistics CSV files for the given RNA files if requested,
+     * and adds them to the list of generated files.
+     *
+     * @param files              the RNA files to analyze
+     * @param dstPath            destination directory for the statistics files
+     * @param generateStatistics whether to generate the statistics files
+     * @param generatedFiles     list to which the created file paths are added
+     * @throws IOException if an I/O error occurs during writing
+     */
     private void generateStatistics(List<RNAFile> files,
                                     Path dstPath,
                                     boolean generateStatistics,
@@ -217,6 +257,15 @@ public class IOController {
         }
     }
 
+    /**
+     * Creates a ZIP archive containing all generated files and deletes the original files.
+     * If the zip file name is blank, no archive is created.
+     *
+     * @param dstPath        destination directory for the ZIP file
+     * @param zipFileName    base name of the ZIP file (without extension)
+     * @param generatedFiles list of paths to include in the archive
+     * @throws IOException if an I/O error occurs during ZIP creation or file deletion
+     */
     private void createZipFile(Path dstPath, String zipFileName, List<Path> generatedFiles) throws IOException {
         if (zipFileName == null || zipFileName.isBlank()) return;
 
