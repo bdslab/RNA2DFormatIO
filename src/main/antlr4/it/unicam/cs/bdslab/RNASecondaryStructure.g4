@@ -140,9 +140,7 @@ NUCLEOTIDE:
 fragment NON_STANDARD_CODE:
 	'"'
 	| '?'
-	| ']'
 	| '~'
-	| '['
 	| '_'
 	| '+'
 	| '='
