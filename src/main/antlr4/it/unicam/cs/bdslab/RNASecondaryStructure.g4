@@ -18,10 +18,6 @@
  */
 grammar RNASecondaryStructure;
 
-@header{
-package it.unicam.cs.bdslab.tarnas.model.antlr;
-}
-
 // Grammar rules
 rna_format:
     aas | ct | edbn | bpseq | fasta /*| rnaml*/
