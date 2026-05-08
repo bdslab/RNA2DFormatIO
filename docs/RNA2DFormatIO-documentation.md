@@ -66,7 +66,6 @@ Main features:
 | Java        | 21             |
 | Maven       | 3.6+           |
 | ANTLR4 runtime | 4.13.2      |
-| jsoup       | 1.15.4         |
 | JUnit Jupiter (test only) | 6.0.1 |
 
 The ANTLR4 parser is generated automatically by Maven during the `generate-sources` phase from the `RNASecondaryStructure.g4` grammar file. No manual generation is required.

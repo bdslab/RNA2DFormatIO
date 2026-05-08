@@ -9,14 +9,12 @@ import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.NonCanonicalE
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.NonCanonicalEdgeFamilyValues;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.WeakBond;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.jsoup.Jsoup;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * ANTLR listener that builds an {@link RNAFile} while traversing the parse tree
@@ -41,8 +39,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
      * Creates a new listener instance. The file to parse must be set via
      * {@link #setFilePath(Path)} before starting the parse walk.
      */
-    public RNAFileListener() {
-    }
+    public RNAFileListener() {}
 
     /**
      * Sets the path of the file to be parsed and initialises internal buffers.
@@ -85,8 +82,9 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     @Override
     public void enterBpseq(RNASecondaryStructureParser.BpseqContext ctx) {
         if (ctx.COMMENT() != null) ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
-        if (ctx.BPSEQCTLINES() != null)
-            this.header.addAll(Arrays.stream(ctx.BPSEQCTLINES().getText().split("\n")).map(String::trim).toList());
+        if (ctx.BPSEQCTLINES() != null) this.header.addAll(
+            Arrays.stream(ctx.BPSEQCTLINES().getText().split("\n")).map(String::trim).toList()
+        );
         if (this.s.getSize() == -1) {
             this.s.setSequence("");
             this.s.setSize(0);
@@ -121,8 +119,9 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     @Override
     public void enterCt(RNASecondaryStructureParser.CtContext ctx) {
         if (ctx.COMMENT() != null) ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
-        if (ctx.BPSEQCTLINES() != null)
-            this.header.addAll(Arrays.stream(ctx.BPSEQCTLINES().getText().split("\n")).map(String::trim).toList());
+        if (ctx.BPSEQCTLINES() != null) this.header.addAll(
+            Arrays.stream(ctx.BPSEQCTLINES().getText().split("\n")).map(String::trim).toList()
+        );
         if (this.s.getSize() == -1) {
             this.s.setSequence("");
             this.s.setSize(0);
@@ -183,7 +182,13 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         var body = this.content.subList(this.header.size(), this.content.size());
         this.s.finalise();
         // create rnafile object with unnecessary empty body
-        this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, (this.s.getSequence() == null || this.s.getSequence().isEmpty()) ? RNAFormat.AAS_NO_SEQUENCE : RNAFormat.AAS);
+        this.rnaFile = new RNAFile(
+            this.fileName,
+            this.header,
+            body,
+            this.s,
+            (this.s.getSequence() == null || this.s.getSequence().isEmpty()) ? RNAFormat.AAS_NO_SEQUENCE : RNAFormat.AAS
+        );
     }
 
     // ---------------------------- FASTA ----------------------------
@@ -205,10 +210,24 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         for (var e : edbn) {
             // Check for mis-classified nucleotide sequences
             if (!e.contains(".")) {
-                if (!e.contains("(") && !e.contains(")") && !e.contains("[") && !e.contains("]") && !e.contains("{") && !e.contains("}")) {
+                if (
+                    !e.contains("(") &&
+                    !e.contains(")") &&
+                    !e.contains("[") &&
+                    !e.contains("]") &&
+                    !e.contains("{") &&
+                    !e.contains("}")
+                ) {
                     if (e.length() >= 5) {
                         // ok, it is not considered edbn, the exception is thrown
-                        String m = "Line " + ctx.start.getLine() + " Character " + (ctx.start.getCharPositionInLine() + 1) + ": " + "unrecognised nucleotide code in " + e;
+                        String m =
+                            "Line " +
+                            ctx.start.getLine() +
+                            " Character " +
+                            (ctx.start.getCharPositionInLine() + 1) +
+                            ": " +
+                            "unrecognised nucleotide code in " +
+                            e;
                         throw new RNAInputFileParserException(m);
                     }
                 }
@@ -220,8 +239,14 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
             this.s.setSize(this.edbnsBuffer.length());
         }
 
-        if (this.s.getSize() != 0 && this.edbnsBuffer.length() != this.s.getSize())
-            throw new RNAInputFileParserException("Extended Dot-Bracket Notation Structure is of length " + this.edbnsBuffer.length() + " while the sequence of nucleotides is of length " + this.s.getSize());
+        if (
+            this.s.getSize() != 0 && this.edbnsBuffer.length() != this.s.getSize()
+        ) throw new RNAInputFileParserException(
+            "Extended Dot-Bracket Notation Structure is of length " +
+                this.edbnsBuffer.length() +
+                " while the sequence of nucleotides is of length " +
+                this.s.getSize()
+        );
     }
 
     @Override
@@ -240,25 +265,23 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     @Override
     public void exitEdbn(RNASecondaryStructureParser.EdbnContext ctx) {
         var bonds = parseEDBN(this.edbnsBuffer.toString());
-        for (var wb : bonds)
-            this.s.addBond(wb);
+        for (var wb : bonds) this.s.addBond(wb);
         this.s.finalise();
-        if (Objects.equals(this.s.getSequence(), ""))
-            this.rnaFile = new RNAFile(this.fileName, this.header, List.of(this.edbnsBuffer.toString()), this.s, RNAFormat.DB_NO_SEQUENCE);
-        else
-            this.rnaFile = new RNAFile(this.fileName, this.header, List.of(this.sequenceBuffer.toString(), this.edbnsBuffer.toString()), this.s, RNAFormat.DB);
+        if (Objects.equals(this.s.getSequence(), "")) this.rnaFile = new RNAFile(
+            this.fileName,
+            this.header,
+            List.of(this.edbnsBuffer.toString()),
+            this.s,
+            RNAFormat.DB_NO_SEQUENCE
+        );
+        else this.rnaFile = new RNAFile(
+            this.fileName,
+            this.header,
+            List.of(this.sequenceBuffer.toString(), this.edbnsBuffer.toString()),
+            this.s,
+            RNAFormat.DB
+        );
     }
-
-    /*
-    // ---------------------------- RNAML ----------------------------
-    @Override
-    public void exitRnamlContent(RNASecondaryStructureParser.RnamlContentContext ctx) {
-        buildEdgeFamilies(this.s, ctx.XML_CONTENT().getText());
-        this.rnaFile = new RNAFile(this.fileName, this.header,
-                List.of(ctx.XML_HEADER_LINE1().getText(), ctx.XML_HEADER_LINE2().getText(), ctx.XML_CONTENT().getText()),
-                this.s, RNAFormat.RNAML);
-    }
-     */
 
     // ---------------------------- EDBN parsing helpers ----------------------------
     /**
@@ -282,7 +305,11 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
             if (isClosingChar(c)) {
                 Character opening = getCorrespondingOpening(c);
                 if (stacks.get(opening) == null || stacks.get(opening).isEmpty()) {
-                    throw new RNAInputFileParserException("Extended dot-bracket notation parsing: closing character at position " + (i + 1) + " does not have a corresponding opening character");
+                    throw new RNAInputFileParserException(
+                        "Extended dot-bracket notation parsing: closing character at position " +
+                            (i + 1) +
+                            " does not have a corresponding opening character"
+                    );
                 }
                 int leftPosition = stacks.get(opening).pop();
                 bonds.add(new WeakBond(leftPosition + 1, i + 1));
@@ -291,9 +318,14 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         var ks = stacks.keySet();
         for (var c : ks)
             if (!stacks.get(c).isEmpty()) {
-                var msg = new StringBuilder("Extended dot-bracket notation parsing: " + stacks.get(c).size() + " missing closing occurrence(s) of " + c + " symbol, left opening symbol(s) at position(s) ");
-                for (Integer i : stacks.get(c))
-                    msg.append(i + 1).append(" ");
+                var msg = new StringBuilder(
+                    "Extended dot-bracket notation parsing: " +
+                        stacks.get(c).size() +
+                        " missing closing occurrence(s) of " +
+                        c +
+                        " symbol, left opening symbol(s) at position(s) "
+                );
+                for (Integer i : stacks.get(c)) msg.append(i + 1).append(" ");
                 throw new RNAInputFileParserException(msg.toString());
             }
         return bonds;
@@ -315,58 +347,5 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
             case '>' -> '<';
             default -> Character.toUpperCase(c);
         };
-    }
-
-    // ---------------------------- RNAML edge families ----------------------------
-    private void buildEdgeFamilies(RNASecondaryStructure structure, String xmlContent) {
-        var doc = Jsoup.parse(xmlContent, "", org.jsoup.parser.Parser.xmlParser());
-        var sequence = doc.select("seq-data")
-                .first()
-                .text()
-                .trim()
-                .replaceAll("\\s+", "");
-
-        var edgeFamilies = new ArrayList<NonCanonicalEdgeFamily>();
-
-        for (var basePair : doc.select("base-pair")) {
-            var edge5pElement = basePair.selectFirst("edge-5p");
-            var edge3pElement = basePair.selectFirst("edge-3p");
-            var bondOrientationElement = basePair.selectFirst("bond-orientation");
-            var position5pElement = basePair.selectFirst("base-id-5p base-id position");
-            var position3pElement = basePair.selectFirst("base-id-3p base-id position");
-
-            if (edge5pElement == null || edge3pElement == null || bondOrientationElement == null) {
-                continue; // We check only these three tags because they may be missing, whereas the position element is always present.
-            }
-
-            var bond_type1_value = edge5pElement.text().trim();
-            var bond_type2_value = edge3pElement.text().trim();
-            var bondOrientation_value = bondOrientationElement.text().trim();
-
-            if (!isCanonicalPair(bond_type1_value, bond_type2_value, bondOrientation_value)) {
-                int base_id_5p_index = Integer.parseInt(position5pElement.text().trim());
-                int base_id_3p_index = Integer.parseInt(position3pElement.text().trim());
-
-                var base_id_5p = String.valueOf(sequence.charAt(base_id_5p_index - 1));
-                var base_id_3p = String.valueOf(sequence.charAt(base_id_3p_index - 1));
-
-                var bond_type_1 = NonCanonicalEdgeFamilyValues.fromShortLabel(bond_type1_value);
-                var bond_type_2 = NonCanonicalEdgeFamilyValues.fromShortLabel(bond_type2_value);
-                var bondOrientation = NonCanonicalEdgeFamilyValues.fromShortLabel(bondOrientation_value);
-
-                var edgeFamily = new NonCanonicalEdgeFamily(base_id_5p, base_id_5p_index, base_id_3p, base_id_3p_index,
-                        bond_type_1, bond_type_2, bondOrientation);
-                edgeFamilies.add(edgeFamily);
-            }
-        }
-        structure.setEdgeFamilies(edgeFamilies);
-    }
-
-    private static boolean isCanonicalPair(String edge5p, String edge3p, String bondOrientation) {
-        boolean isCanonicalEdge = (edge5p.equals("W") && edge3p.equals("W")) ||
-                (edge5p.equals("+") && edge3p.equals("+")) ||
-                (edge5p.equals("-") && edge3p.equals("-"));
-        boolean isCanonicalBondOrientation = bondOrientation.equals("c");
-        return isCanonicalEdge && isCanonicalBondOrientation;
     }
 }
