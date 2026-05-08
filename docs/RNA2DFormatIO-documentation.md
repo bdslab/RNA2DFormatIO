@@ -105,7 +105,7 @@ ACGUACGU
 (1,8);(2,7);(3,6)
 ```
 
-Pairs are separated by `;` or `,`. Indices start at 1.
+Pairs are separated by `;` and the index of the pairs are separated by `,`. Indices start at 1.
 
 ### 4.2 AAS NO SEQUENCE
 
