@@ -5,8 +5,6 @@ import it.unicam.cs.bdslab.RNASecondaryStructureParser;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAInputFileParserException;
-import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.NonCanonicalEdgeFamily;
-import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.NonCanonicalEdgeFamilyValues;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.WeakBond;
 import java.io.IOException;
@@ -20,8 +18,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
  * ANTLR listener that builds an {@link RNAFile} while traversing the parse tree
  * of an RNA secondary structure file.
  * <p>
- * This listener extracts the header, body, sequence, secondary structure bonds,
- * and (for RNAML) non-canonical edge families. After parsing, the constructed
+ * This listener extracts the header, body, sequence, secondary structure bonds. After parsing, the constructed
  * {@code RNAFile} can be retrieved via {@link #getRnaFile()}.
  * </p>
  */
