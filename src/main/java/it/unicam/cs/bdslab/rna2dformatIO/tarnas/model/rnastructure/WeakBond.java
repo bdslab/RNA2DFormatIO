@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAInputFileParserException;
@@ -24,11 +40,10 @@ public class WeakBond implements Comparable<WeakBond> {
      */
     public WeakBond(int left, int right) throws RNAInputFileParserException {
         // index checks
-        if (left < 1)
-            throw new RNAInputFileParserException("Weak Bond: left index: " + left + " less than 1.");
-        if (left >= right)
-            throw new RNAInputFileParserException(
-                    "Weak Bond: left index: " + left + " greater than or equal to right index: " + right);
+        if (left < 1) throw new RNAInputFileParserException("Weak Bond: left index: " + left + " less than 1.");
+        if (left >= right) throw new RNAInputFileParserException(
+            "Weak Bond: left index: " + left + " greater than or equal to right index: " + right
+        );
         // checks passed
         this.left = left;
         this.right = right;
@@ -58,12 +73,12 @@ public class WeakBond implements Comparable<WeakBond> {
      *                                  WeakBond
      */
     public boolean crossesWith(WeakBond wb) {
-        if (wb == null)
-            throw new NullPointerException("Passed Weak Bond was null");
-        if (this.equals(wb))
-            throw new IllegalArgumentException("Passed Weak Bond was equal to this one");
-        return wb.left < this.left && wb.right < this.right && wb.right > this.left || // --__--__    (wb   -> -)
-               wb.left > this.left && wb.right > this.right && wb.left < this.right;   // __--__--    (this -> _)
+        if (wb == null) throw new NullPointerException("Passed Weak Bond was null");
+        if (this.equals(wb)) throw new IllegalArgumentException("Passed Weak Bond was equal to this one");
+        return (
+            (wb.left < this.left && wb.right < this.right && wb.right > this.left) || // --__--__    (wb   -> -)
+            (wb.left > this.left && wb.right > this.right && wb.left < this.right)
+        ); // __--__--    (this -> _)
     }
 
     /*
@@ -115,5 +130,4 @@ public class WeakBond implements Comparable<WeakBond> {
         oright = o.right;
         return right.compareTo(oright);
     }
-
 }

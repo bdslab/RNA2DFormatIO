@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure;
 
 import java.util.Objects;
@@ -31,11 +47,15 @@ public class NonCanonicalEdgeFamily {
      * @param bond_type2        edge type for the 3' nucleotide
      * @param bondOrientation   cis/trans orientation of the interaction
      */
-    public NonCanonicalEdgeFamily(String base_id_5p, int base_id_5p_index,
-                                  String base_id_3p, int base_id_3p_index,
-                                  NonCanonicalEdgeFamilyValues bond_type1,
-                                  NonCanonicalEdgeFamilyValues bond_type2,
-                                  NonCanonicalEdgeFamilyValues bondOrientation) {
+    public NonCanonicalEdgeFamily(
+        String base_id_5p,
+        int base_id_5p_index,
+        String base_id_3p,
+        int base_id_3p_index,
+        NonCanonicalEdgeFamilyValues bond_type1,
+        NonCanonicalEdgeFamilyValues bond_type2,
+        NonCanonicalEdgeFamilyValues bondOrientation
+    ) {
         this.base_id_5p = base_id_5p;
         this.base_id_5p_index = base_id_5p_index;
         this.base_id_3p = base_id_3p;
@@ -184,13 +204,15 @@ public class NonCanonicalEdgeFamily {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         NonCanonicalEdgeFamily that = (NonCanonicalEdgeFamily) o;
-        return getBase_id_5p_index() == that.getBase_id_5p_index() &&
-                getBase_id_3p_index() == that.getBase_id_3p_index() &&
-                Objects.equals(getBase_id_5p(), that.getBase_id_5p()) &&
-                Objects.equals(getBase_id_3p(), that.getBase_id_3p()) &&
-                getBond_type1() == that.getBond_type1() &&
-                getBond_type2() == that.getBond_type2() &&
-                getBondOrientation() == that.getBondOrientation();
+        return (
+            getBase_id_5p_index() == that.getBase_id_5p_index() &&
+            getBase_id_3p_index() == that.getBase_id_3p_index() &&
+            Objects.equals(getBase_id_5p(), that.getBase_id_5p()) &&
+            Objects.equals(getBase_id_3p(), that.getBase_id_3p()) &&
+            getBond_type1() == that.getBond_type1() &&
+            getBond_type2() == that.getBond_type2() &&
+            getBondOrientation() == that.getBondOrientation()
+        );
     }
 
     /**
@@ -200,9 +222,15 @@ public class NonCanonicalEdgeFamily {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getBase_id_5p(), getBase_id_5p_index(),
-                getBase_id_3p(), getBase_id_3p_index(),
-                getBond_type1(), getBond_type2(), getBondOrientation());
+        return Objects.hash(
+            getBase_id_5p(),
+            getBase_id_5p_index(),
+            getBase_id_3p(),
+            getBase_id_3p_index(),
+            getBond_type1(),
+            getBond_type2(),
+            getBondOrientation()
+        );
     }
 
     /**
@@ -212,14 +240,25 @@ public class NonCanonicalEdgeFamily {
      */
     @Override
     public String toString() {
-        return "NonCanonicalEdgeFamily{" +
-                "base_id_5p='" + base_id_5p + '\'' +
-                ", base_id_5p_index=" + base_id_5p_index +
-                ", base_id_3p='" + base_id_3p + '\'' +
-                ", base_id_3p_index=" + base_id_3p_index +
-                ", bond_type1=" + bond_type1 +
-                ", bond_type2=" + bond_type2 +
-                ", bondOrientation=" + bondOrientation +
-                '}';
+        return (
+            "NonCanonicalEdgeFamily{" +
+            "base_id_5p='" +
+            base_id_5p +
+            '\'' +
+            ", base_id_5p_index=" +
+            base_id_5p_index +
+            ", base_id_3p='" +
+            base_id_3p +
+            '\'' +
+            ", base_id_3p_index=" +
+            base_id_3p_index +
+            ", bond_type1=" +
+            bond_type1 +
+            ", bond_type2=" +
+            bond_type2 +
+            ", bondOrientation=" +
+            bondOrientation +
+            '}'
+        );
     }
 }

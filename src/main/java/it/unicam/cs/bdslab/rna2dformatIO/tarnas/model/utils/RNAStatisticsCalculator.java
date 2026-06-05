@@ -1,9 +1,24 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.utils;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.WeakBond;
-
 import java.util.function.Predicate;
 
 /**
@@ -108,7 +123,11 @@ public class RNAStatisticsCalculator {
      * @return {@code true} if sequence data is available, {@code false} otherwise
      */
     private static boolean checkSequence(RNAFormat format) {
-        return !(format.equals(RNAFormat.DB_NO_SEQUENCE) || format.equals(RNAFormat.AAS_NO_SEQUENCE) || format.equals(RNAFormat.FASTA));
+        return !(
+            format.equals(RNAFormat.DB_NO_SEQUENCE) ||
+            format.equals(RNAFormat.AAS_NO_SEQUENCE) ||
+            format.equals(RNAFormat.FASTA)
+        );
     }
 
     /**
@@ -121,9 +140,7 @@ public class RNAStatisticsCalculator {
     private static int getBondsOf(Predicate<WeakBond> bondPredicate, RNAFile rnaFile) {
         int bonds = 0;
         if (checkSequence(rnaFile.getFormat())) {
-            for (WeakBond bond : rnaFile.getStructure().getBonds())
-                if (bondPredicate.test(bond))
-                    bonds++;
+            for (WeakBond bond : rnaFile.getStructure().getBonds()) if (bondPredicate.test(bond)) bonds++;
         }
         return bonds;
     }
@@ -139,8 +156,7 @@ public class RNAStatisticsCalculator {
         int nucleotides = 0;
         if (checkSequence(rnaFile.getFormat())) {
             for (char nucleotide : rnaFile.getStructure().getSequence().toCharArray())
-                if (nucleotidePredicate.test(nucleotide))
-                    nucleotides++;
+                if (nucleotidePredicate.test(nucleotide)) nucleotides++;
         }
         return nucleotides;
     }
@@ -156,8 +172,10 @@ public class RNAStatisticsCalculator {
      */
     private static boolean isBondBetween(char nucleotide1, char nucleotide2, WeakBond bond, RNAFile rnaFile) {
         var sequence = rnaFile.getStructure().getSequence();
-        return (sequence.charAt(bond.getLeft() - 1) == nucleotide1 && sequence.charAt(bond.getRight() - 1) == nucleotide2) ||
-                (sequence.charAt(bond.getLeft() - 1) == nucleotide2 && sequence.charAt(bond.getRight() - 1) == nucleotide1);
+        return (
+            (sequence.charAt(bond.getLeft() - 1) == nucleotide1 &&
+                sequence.charAt(bond.getRight() - 1) == nucleotide2) ||
+            (sequence.charAt(bond.getLeft() - 1) == nucleotide2 && sequence.charAt(bond.getRight() - 1) == nucleotide1)
+        );
     }
-
 }

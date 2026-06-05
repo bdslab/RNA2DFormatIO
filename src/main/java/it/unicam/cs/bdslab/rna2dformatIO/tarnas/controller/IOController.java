@@ -1,9 +1,26 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.controller;
+
+import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.utils.RNAStatisticsCalculator.*;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFileConstructor;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,8 +30,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.utils.RNAStatisticsCalculator.*;
 
 /**
  * Singleton controller responsible for loading, saving, and packaging RNA files.
@@ -102,8 +117,7 @@ public class IOController {
             recognizedFormat = rnaFile.getFormat();
         } else {
             throw new IllegalArgumentException(
-                    "All loaded files must share the same format: " + recognizedFormat +
-                            ", but got: " + rnaFile.getFormat()
+                "All loaded files must share the same format: " + recognizedFormat + ", but got: " + rnaFile.getFormat()
             );
         }
 
@@ -122,8 +136,15 @@ public class IOController {
             var pathSelectedDir = srcDirectoryPath.getFileName().toString();
             for (var path : directoryStream) {
                 var pathFromDirName = path.toString().substring(path.toString().indexOf(pathSelectedDir));
-                var pathBetweenDirAndFile = pathFromDirName.substring(0, pathFromDirName.lastIndexOf(path.getFileName().toString()));
-                if (Files.isRegularFile(path) && !path.getFileName().toString().startsWith(".") && !pathBetweenDirAndFile.contains(".")) {
+                var pathBetweenDirAndFile = pathFromDirName.substring(
+                    0,
+                    pathFromDirName.lastIndexOf(path.getFileName().toString())
+                );
+                if (
+                    Files.isRegularFile(path) &&
+                    !path.getFileName().toString().startsWith(".") &&
+                    !pathBetweenDirAndFile.contains(".")
+                ) {
                     loadFile(path);
                 }
             }
@@ -143,12 +164,13 @@ public class IOController {
      *                                  if blank, no ZIP is created
      * @throws IOException if an I/O error occurs during file writing or zipping
      */
-    public void saveFiles(List<RNAFile> files,
-                          Path dstPath,
-                          boolean generateNonCanonicalPairs,
-                          boolean generateStatistics,
-                          String zipFileName) throws IOException {
-
+    public void saveFiles(
+        List<RNAFile> files,
+        Path dstPath,
+        boolean generateNonCanonicalPairs,
+        boolean generateStatistics,
+        String zipFileName
+    ) throws IOException {
         var generatedFiles = new ArrayList<Path>();
 
         saveFiles(files, dstPath, generatedFiles);
@@ -188,27 +210,24 @@ public class IOController {
      * @param generatedFiles            list to which the processed file paths are added
      * @throws IOException if an I/O error occurs during file operations
      */
-    private void processNonCanonicalPairs(boolean generateNonCanonicalPairs,
-                                          Path dstPath,
-                                          List<Path> generatedFiles) throws IOException {
+    private void processNonCanonicalPairs(boolean generateNonCanonicalPairs, Path dstPath, List<Path> generatedFiles)
+        throws IOException {
         var currentDir = Paths.get(System.getProperty("user.dir"));
         try (var csvStream = Files.list(currentDir)) {
-            var csvFiles = csvStream
-                    .filter(path -> path.toString().endsWith(".csv"))
-                    .toList();
+            var csvFiles = csvStream.filter(path -> path.toString().endsWith(".csv")).toList();
 
             for (var csvFile : csvFiles) {
                 if (generateNonCanonicalPairs) {
-
                     var newFileName = csvFile.getFileName().toString().split("\\.")[0] + "_nc.csv";
                     var destinationPath = dstPath.resolve(newFileName);
 
                     Files.move(csvFile, destinationPath);
 
                     // Replace spaces with commas in each line
-                    var updatedLines = Files.readAllLines(destinationPath).stream()
-                            .map(line -> line.replace(" ", ","))
-                            .collect(Collectors.toList());
+                    var updatedLines = Files.readAllLines(destinationPath)
+                        .stream()
+                        .map(line -> line.replace(" ", ","))
+                        .collect(Collectors.toList());
                     Files.write(destinationPath, updatedLines);
 
                     generatedFiles.add(destinationPath);
@@ -229,27 +248,31 @@ public class IOController {
      * @param generatedFiles     list to which the created file paths are added
      * @throws IOException if an I/O error occurs during writing
      */
-    private void generateStatistics(List<RNAFile> files,
-                                    Path dstPath,
-                                    boolean generateStatistics,
-                                    List<Path> generatedFiles) throws IOException {
+    private void generateStatistics(
+        List<RNAFile> files,
+        Path dstPath,
+        boolean generateStatistics,
+        List<Path> generatedFiles
+    ) throws IOException {
         if (!generateStatistics) return;
 
         for (var file : files) {
             var statsFileName = file.getFileName().split("\\.")[0] + "_seqInfo.csv";
             var statsFilePath = dstPath.resolve(statsFileName);
 
-            var header = "Nucleotide count, Bond count, A count, C count, G count, U count, GC bonds, AU bonds, GU bonds";
-            var statsData = String.join(", ",
-                    String.valueOf(getNucleotideCount(file)),
-                    String.valueOf(getBondCount(file)),
-                    String.valueOf(getACount(file)),
-                    String.valueOf(getCCount(file)),
-                    String.valueOf(getGCount(file)),
-                    String.valueOf(getUCount(file)),
-                    String.valueOf(getGcBonds(file)),
-                    String.valueOf(getAuBonds(file)),
-                    String.valueOf(getGuBonds(file))
+            var header =
+                "Nucleotide count, Bond count, A count, C count, G count, U count, GC bonds, AU bonds, GU bonds";
+            var statsData = String.join(
+                ", ",
+                String.valueOf(getNucleotideCount(file)),
+                String.valueOf(getBondCount(file)),
+                String.valueOf(getACount(file)),
+                String.valueOf(getCCount(file)),
+                String.valueOf(getGCount(file)),
+                String.valueOf(getUCount(file)),
+                String.valueOf(getGcBonds(file)),
+                String.valueOf(getAuBonds(file)),
+                String.valueOf(getGuBonds(file))
             );
 
             Files.write(statsFilePath, List.of(header, statsData));
@@ -279,7 +302,7 @@ public class IOController {
                 Files.copy(filePath, zipOutputStream);
                 zipOutputStream.closeEntry();
 
-                Files.delete(filePath);  // Remove original file after adding to ZIP
+                Files.delete(filePath); // Remove original file after adding to ZIP
             }
         }
     }

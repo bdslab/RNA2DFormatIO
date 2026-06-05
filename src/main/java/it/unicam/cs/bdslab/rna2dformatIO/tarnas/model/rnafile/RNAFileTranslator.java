@@ -1,11 +1,26 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile;
+
+import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat.*;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.utils.Region;
-
 import java.util.*;
-
-import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat.*;
 
 /**
  * A representation of an RNA files translator.<br>
@@ -31,7 +46,13 @@ public class RNAFileTranslator {
         // create DB body
         var body = createDBBody(rnaFile.getStructure(), true);
         // return a formatted rna file object
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "db"), header, body, rnaFile.getStructure(), RNAFormat.DB);
+        return new RNAFile(
+            getFileNameWithDstExtension(rnaFile.getFileName(), "db"),
+            header,
+            body,
+            rnaFile.getStructure(),
+            RNAFormat.DB
+        );
     }
 
     /**
@@ -46,7 +67,13 @@ public class RNAFileTranslator {
         // create DB no sequence body
         var body = createDBBody(rnaFile.getStructure(), false);
         // return a formatted rna file object
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "db"), header, body, rnaFile.getStructure(), DB_NO_SEQUENCE);
+        return new RNAFile(
+            getFileNameWithDstExtension(rnaFile.getFileName(), "db"),
+            header,
+            body,
+            rnaFile.getStructure(),
+            DB_NO_SEQUENCE
+        );
     }
 
     /**
@@ -61,7 +88,13 @@ public class RNAFileTranslator {
         // create BPSEQ body
         var body = createBPSEQBody(rnaFile.getStructure());
         // return a formatted rna file object
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "bpseq"), header, body, rnaFile.getStructure(), BPSEQ);
+        return new RNAFile(
+            getFileNameWithDstExtension(rnaFile.getFileName(), "bpseq"),
+            header,
+            body,
+            rnaFile.getStructure(),
+            BPSEQ
+        );
     }
 
     /**
@@ -76,7 +109,13 @@ public class RNAFileTranslator {
         // create CT body
         var body = createCTBody(rnaFile.getStructure());
         // return a formatted rna file object
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "ct"), header, body, rnaFile.getStructure(), CT);
+        return new RNAFile(
+            getFileNameWithDstExtension(rnaFile.getFileName(), "ct"),
+            header,
+            body,
+            rnaFile.getStructure(),
+            CT
+        );
     }
 
     /**
@@ -91,7 +130,13 @@ public class RNAFileTranslator {
         // create AAS body
         var body = createAASBody(rnaFile.getStructure(), true);
         // return a formatted rna file object
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body, rnaFile.getStructure(), RNAFormat.AAS);
+        return new RNAFile(
+            getFileNameWithDstExtension(rnaFile.getFileName(), "aas"),
+            header,
+            body,
+            rnaFile.getStructure(),
+            RNAFormat.AAS
+        );
     }
 
     /**
@@ -109,7 +154,13 @@ public class RNAFileTranslator {
         var secondaryStructureWithoutSequence = new RNASecondaryStructure();
         secondaryStructureWithoutSequence.setSize(rnaFile.getStructure().getSize());
         secondaryStructureWithoutSequence.setBonds(rnaFile.getStructure().getBonds());
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body, secondaryStructureWithoutSequence, RNAFormat.AAS_NO_SEQUENCE);
+        return new RNAFile(
+            getFileNameWithDstExtension(rnaFile.getFileName(), "aas"),
+            header,
+            body,
+            secondaryStructureWithoutSequence,
+            RNAFormat.AAS_NO_SEQUENCE
+        );
     }
 
     /**
@@ -127,7 +178,13 @@ public class RNAFileTranslator {
         // return a formatted rna file object
         var secondaryStructureOnlySize = new RNASecondaryStructure();
         secondaryStructureOnlySize.setSize(rnaSecondaryStructure.getSize());
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "fasta"), header, body, secondaryStructureOnlySize, RNAFormat.FASTA);
+        return new RNAFile(
+            getFileNameWithDstExtension(rnaFile.getFileName(), "fasta"),
+            header,
+            body,
+            secondaryStructureOnlySize,
+            RNAFormat.FASTA
+        );
     }
 
     /**
@@ -144,9 +201,7 @@ public class RNAFileTranslator {
         regs = sortRegionsByStartPoint(regs);
         setRegionsOrder(regs, n);
         var structure = encodeBasePairs(regs, rnaSecondaryStructure.getSize());
-        return addSequence ?
-                List.of(rnaSecondaryStructure.getSequence(), structure) :
-                List.of(structure);
+        return addSequence ? List.of(rnaSecondaryStructure.getSequence(), structure) : List.of(structure);
     }
 
     /**
@@ -160,17 +215,12 @@ public class RNAFileTranslator {
     private static List<String> createAASBody(RNASecondaryStructure rnaSecondaryStructure, boolean addSequence) {
         var structure = new StringBuilder();
         for (var b : rnaSecondaryStructure.getBonds())
-            structure.append("(")
-                    .append(b.getLeft())
-                    .append(",")
-                    .append(b.getRight())
-                    .append(");");
+            structure.append("(").append(b.getLeft()).append(",").append(b.getRight()).append(");");
         // remove the character ';'
-        if (structure.length() > 0)
-            structure.setLength(structure.length() - 1);
-        return addSequence ?
-                List.of(rnaSecondaryStructure.getSequence(), structure.toString()) :
-                List.of(structure.toString());
+        if (structure.length() > 0) structure.setLength(structure.length() - 1);
+        return addSequence
+            ? List.of(rnaSecondaryStructure.getSequence(), structure.toString())
+            : List.of(structure.toString());
     }
 
     /**
@@ -183,9 +233,8 @@ public class RNAFileTranslator {
         var body = new ArrayList<String>();
         // i=1 because bpseq indexes starts from 1
         for (int i = 1; i <= rnaSecondaryStructure.getSequence().length(); i++) {
-            var line = i + " " +
-                    rnaSecondaryStructure.getSequence().charAt(i - 1) + " " +
-                    rnaSecondaryStructure.getP()[i];
+            var line =
+                i + " " + rnaSecondaryStructure.getSequence().charAt(i - 1) + " " + rnaSecondaryStructure.getP()[i];
             body.add(line);
         }
         return body;
@@ -297,9 +346,11 @@ public class RNAFileTranslator {
         var wb1 = r1.getWeakBond();
         var wb2 = r2.getWeakBond();
         // ( [ ) ]
-        var firstCase = wb1.getLeft() < wb2.getLeft() && wb1.getRight() > wb2.getLeft() && wb2.getRight() > wb1.getRight();
+        var firstCase =
+            wb1.getLeft() < wb2.getLeft() && wb1.getRight() > wb2.getLeft() && wb2.getRight() > wb1.getRight();
         // [ ( ] )
-        var secondCase = wb2.getLeft() < wb1.getLeft() && wb2.getRight() > wb1.getLeft() && wb1.getRight() > wb2.getRight();
+        var secondCase =
+            wb2.getLeft() < wb1.getLeft() && wb2.getRight() > wb1.getLeft() && wb1.getRight() > wb2.getRight();
         return firstCase || secondCase;
     }
 
@@ -375,5 +426,4 @@ public class RNAFileTranslator {
     private static String getFileNameWithDstExtension(String fileName, String dstExtension) {
         return fileName.substring(0, fileName.lastIndexOf('.') + 1) + dstExtension;
     }
-
 }

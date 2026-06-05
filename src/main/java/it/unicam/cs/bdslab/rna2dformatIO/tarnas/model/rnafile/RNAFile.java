@@ -1,7 +1,22 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.RNASecondaryStructure;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -51,7 +66,13 @@ public class RNAFile {
      * @param structure the {@link RNASecondaryStructure} represented by this file
      * @param format    the {@link RNAFormat} of this file
      */
-    public RNAFile(String fileName, List<String> header, List<String> body, RNASecondaryStructure structure, RNAFormat format) {
+    public RNAFile(
+        String fileName,
+        List<String> header,
+        List<String> body,
+        RNASecondaryStructure structure,
+        RNAFormat format
+    ) {
         this.fileName = fileName;
         this.header = header;
         this.body = body;
@@ -144,12 +165,14 @@ public class RNAFile {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RNAFile rnaFile)) return false;
-        return getFileName().equals(rnaFile.getFileName()) &&
-                getHeader().equals(rnaFile.getHeader()) &&
-                getStructure().equals(rnaFile.getStructure()) &&
-                getFormat().equals(rnaFile.getFormat()) &&
-                getBody().equals(rnaFile.getBody()) &&
-                getContent().equals(rnaFile.getContent());
+        return (
+            getFileName().equals(rnaFile.getFileName()) &&
+            getHeader().equals(rnaFile.getHeader()) &&
+            getStructure().equals(rnaFile.getStructure()) &&
+            getFormat().equals(rnaFile.getFormat()) &&
+            getBody().equals(rnaFile.getBody()) &&
+            getContent().equals(rnaFile.getContent())
+        );
     }
 
     /**
@@ -169,13 +192,22 @@ public class RNAFile {
      */
     @Override
     public String toString() {
-        return "RNAFile{" +
-                "fileName='" + fileName + '\'' +
-                ", header=" + header +
-                ", structure=" + structure +
-                ", format=" + format +
-                ", body=" + body +
-                ", content=" + content +
-                '}';
+        return (
+            "RNAFile{" +
+            "fileName='" +
+            fileName +
+            '\'' +
+            ", header=" +
+            header +
+            ", structure=" +
+            structure +
+            ", format=" +
+            format +
+            ", body=" +
+            body +
+            ", content=" +
+            content +
+            '}'
+        );
     }
 }

@@ -1,13 +1,28 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.WeakBond;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link RNAFile}.
@@ -26,11 +41,11 @@ class RNAFileTest {
         structure.finalise();
 
         rnaFile = new RNAFile(
-                "sample.bpseq",
-                List.of("# comment"),
-                List.of("1 A 4", "2 U 0", "3 G 0", "4 C 1"),
-                structure,
-                RNAFormat.BPSEQ
+            "sample.bpseq",
+            List.of("# comment"),
+            List.of("1 A 4", "2 U 0", "3 G 0", "4 C 1"),
+            structure,
+            RNAFormat.BPSEQ
         );
     }
 
@@ -98,11 +113,11 @@ class RNAFileTest {
     @Test
     void equalFilesAreEqual() {
         RNAFile copy = new RNAFile(
-                "sample.bpseq",
-                List.of("# comment"),
-                List.of("1 A 4", "2 U 0", "3 G 0", "4 C 1"),
-                structure,
-                RNAFormat.BPSEQ
+            "sample.bpseq",
+            List.of("# comment"),
+            List.of("1 A 4", "2 U 0", "3 G 0", "4 C 1"),
+            structure,
+            RNAFormat.BPSEQ
         );
         assertEquals(rnaFile, copy);
         assertEquals(rnaFile.hashCode(), copy.hashCode());
@@ -111,11 +126,11 @@ class RNAFileTest {
     @Test
     void filesWithDifferentNameAreNotEqual() {
         RNAFile other = new RNAFile(
-                "other.bpseq",
-                List.of("# comment"),
-                List.of("1 A 4", "2 U 0", "3 G 0", "4 C 1"),
-                structure,
-                RNAFormat.BPSEQ
+            "other.bpseq",
+            List.of("# comment"),
+            List.of("1 A 4", "2 U 0", "3 G 0", "4 C 1"),
+            structure,
+            RNAFormat.BPSEQ
         );
         assertNotEquals(rnaFile, other);
     }

@@ -1,7 +1,22 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAInputFileParserException;
-
 import java.util.*;
 
 /**
@@ -104,29 +119,53 @@ public class RNASecondaryStructure {
         // check if the indexes of the new bond are already present in the current
         // list of bonds
         for (WeakBond wb : this.bonds)
-            if (b.getLeft() == wb.getLeft())
-                throw new RNAInputFileParserException("Weak Bond left index " + b.getLeft() + " is equal to bond ("
-                        + wb.getLeft() + ", " + wb.getRight() + ") left index");
-            else if (b.getLeft() == wb.getRight())
-                throw new RNAInputFileParserException("Weak Bond left index " + b.getLeft() + " is equal to bond ("
-                        + wb.getLeft() + ", " + wb.getRight() + ") right index");
-            else if (b.getRight() == wb.getLeft())
-                throw new RNAInputFileParserException("Weak Bond right index " + b.getRight() + " is equal to bond ("
-                        + wb.getLeft() + ", " + wb.getRight() + ") left index");
-            else if (b.getRight() == wb.getRight())
-                throw new RNAInputFileParserException("Weak Bond right index " + b.getRight() + " is equal to bond ("
-                        + wb.getLeft() + ", " + wb.getRight() + ") right index");
+            if (b.getLeft() == wb.getLeft()) throw new RNAInputFileParserException(
+                "Weak Bond left index " +
+                    b.getLeft() +
+                    " is equal to bond (" +
+                    wb.getLeft() +
+                    ", " +
+                    wb.getRight() +
+                    ") left index"
+            );
+            else if (b.getLeft() == wb.getRight()) throw new RNAInputFileParserException(
+                "Weak Bond left index " +
+                    b.getLeft() +
+                    " is equal to bond (" +
+                    wb.getLeft() +
+                    ", " +
+                    wb.getRight() +
+                    ") right index"
+            );
+            else if (b.getRight() == wb.getLeft()) throw new RNAInputFileParserException(
+                "Weak Bond right index " +
+                    b.getRight() +
+                    " is equal to bond (" +
+                    wb.getLeft() +
+                    ", " +
+                    wb.getRight() +
+                    ") left index"
+            );
+            else if (b.getRight() == wb.getRight()) throw new RNAInputFileParserException(
+                "Weak Bond right index " +
+                    b.getRight() +
+                    " is equal to bond (" +
+                    wb.getLeft() +
+                    ", " +
+                    wb.getRight() +
+                    ") right index"
+            );
         // check or increase right limit
-        if (!Objects.equals(this.sequence, "") && this.sequence != null) { // Sequence still not set
+        if (!Objects.equals(this.sequence, "") && this.sequence != null) {
+            // Sequence still not set
             // the size is fixed to the length of the sequence
-            if (b.getRight() > this.size)
-                throw new RNAInputFileParserException(
-                        "Weak Bond right index " + b.getRight() + " is greater than the structure size " + this.size);
-        } else
-            // the size could increase by adding bonds because
-            // in this structure the sequence was not set
-            if (b.getRight() > this.size)
-                this.size = b.getRight();
+            if (b.getRight() > this.size) throw new RNAInputFileParserException(
+                "Weak Bond right index " + b.getRight() + " is greater than the structure size " + this.size
+            );
+        }
+        // the size could increase by adding bonds because
+        // in this structure the sequence was not set
+        else if (b.getRight() > this.size) this.size = b.getRight();
         // checks done: add the bond
         this.bonds.add(b);
     }
@@ -137,10 +176,9 @@ public class RNASecondaryStructure {
      * @return {@code true} if at least two weak bonds cross each other, {@code false} otherwise
      */
     public boolean isPseudoknotted() {
-        for (int i = 0; i < this.bonds.size(); i++)
-            for (int j = i + 1; j < this.bonds.size(); j++)
-                if (this.bonds.get(i).crossesWith(this.bonds.get(j)))
-                    return true;
+        for (int i = 0; i < this.bonds.size(); i++) for (int j = i + 1; j < this.bonds.size(); j++) if (
+            this.bonds.get(i).crossesWith(this.bonds.get(j))
+        ) return true;
         return false;
     }
 
@@ -151,9 +189,8 @@ public class RNASecondaryStructure {
      * @throws RNAInputFileParserException if any bond does not match the allowed pairs
      */
     public void checkBasePairs() {
-        if (this.sequence == null)
-            // do nothing
-            return;
+        if (this.sequence == null) // do nothing
+        return;
         // check all the pairs
         for (WeakBond b : this.bonds) {
             // base pair check
@@ -161,24 +198,60 @@ public class RNASecondaryStructure {
             int index2 = b.getRight() - 1;
             switch (this.sequence.charAt(index1)) {
                 case 'A':
-                    if (this.sequence.charAt(index2) != 'U')
-                        throw new RNAInputFileParserException("Base pair not allowed in RNA: " + this.sequence.charAt(index1)
-                                + "-" + this.sequence.charAt(index2) + " at weak bond (" + b.getLeft() + ", " + b.getRight() + ")");
+                    if (this.sequence.charAt(index2) != 'U') throw new RNAInputFileParserException(
+                        "Base pair not allowed in RNA: " +
+                            this.sequence.charAt(index1) +
+                            "-" +
+                            this.sequence.charAt(index2) +
+                            " at weak bond (" +
+                            b.getLeft() +
+                            ", " +
+                            b.getRight() +
+                            ")"
+                    );
                     break;
                 case 'U':
-                    if (this.sequence.charAt(index2) != 'A' && this.sequence.charAt(index2) != 'G')
-                        throw new RNAInputFileParserException("Base pair not allowed in RNA: " + this.sequence.charAt(index1)
-                                + "-" + this.sequence.charAt(index2) + " at weak bond (" + b.getLeft() + ", " + b.getRight() + ")");
+                    if (
+                        this.sequence.charAt(index2) != 'A' && this.sequence.charAt(index2) != 'G'
+                    ) throw new RNAInputFileParserException(
+                        "Base pair not allowed in RNA: " +
+                            this.sequence.charAt(index1) +
+                            "-" +
+                            this.sequence.charAt(index2) +
+                            " at weak bond (" +
+                            b.getLeft() +
+                            ", " +
+                            b.getRight() +
+                            ")"
+                    );
                     break;
                 case 'C':
-                    if (this.sequence.charAt(index2) != 'G')
-                        throw new RNAInputFileParserException("Base pair not allowed in RNA: " + this.sequence.charAt(index1)
-                                + "-" + this.sequence.charAt(index2) + " at weak bond (" + b.getLeft() + ", " + b.getRight() + ")");
+                    if (this.sequence.charAt(index2) != 'G') throw new RNAInputFileParserException(
+                        "Base pair not allowed in RNA: " +
+                            this.sequence.charAt(index1) +
+                            "-" +
+                            this.sequence.charAt(index2) +
+                            " at weak bond (" +
+                            b.getLeft() +
+                            ", " +
+                            b.getRight() +
+                            ")"
+                    );
                     break;
                 case 'G':
-                    if (this.sequence.charAt(index2) != 'C' && this.sequence.charAt(index2) != 'U')
-                        throw new RNAInputFileParserException("Base pair not allowed in RNA: " + this.sequence.charAt(index1)
-                                + "-" + this.sequence.charAt(index2) + " at weak bond (" + b.getLeft() + ", " + b.getRight() + ")");
+                    if (
+                        this.sequence.charAt(index2) != 'C' && this.sequence.charAt(index2) != 'U'
+                    ) throw new RNAInputFileParserException(
+                        "Base pair not allowed in RNA: " +
+                            this.sequence.charAt(index1) +
+                            "-" +
+                            this.sequence.charAt(index2) +
+                            " at weak bond (" +
+                            b.getLeft() +
+                            ", " +
+                            b.getRight() +
+                            ")"
+                    );
                     break;
             }
         }
@@ -195,9 +268,9 @@ public class RNASecondaryStructure {
      */
     public void finalise() {
         Collections.sort(this.bonds);
-        if (this.size == -1)
-            throw new RNAInputFileParserException(
-                    "Error in determining the size of the secondary structure");
+        if (this.size == -1) throw new RNAInputFileParserException(
+            "Error in determining the size of the secondary structure"
+        );
         // create the array p
         this.p = new int[this.size + 1]; // position 0 is not used
         // initialise the array p
@@ -227,7 +300,12 @@ public class RNASecondaryStructure {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RNASecondaryStructure that)) return false;
-        return getSize() == that.getSize() && Objects.equals(getSequence(), that.getSequence()) && Objects.equals(getBonds(), that.getBonds()) && Arrays.equals(getP(), that.getP());
+        return (
+            getSize() == that.getSize() &&
+            Objects.equals(getSequence(), that.getSequence()) &&
+            Objects.equals(getBonds(), that.getBonds()) &&
+            Arrays.equals(getP(), that.getP())
+        );
     }
 
     /**
@@ -249,12 +327,19 @@ public class RNASecondaryStructure {
      */
     @Override
     public String toString() {
-        return "RNASecondaryStructure{" +
-                "sequence='" + sequence + '\'' +
-                ", bonds=" + bonds +
-                ", size=" + size +
-                ", p=" + Arrays.toString(p) +
-                '}';
+        return (
+            "RNASecondaryStructure{" +
+            "sequence='" +
+            sequence +
+            '\'' +
+            ", bonds=" +
+            bonds +
+            ", size=" +
+            size +
+            ", p=" +
+            Arrays.toString(p) +
+            '}'
+        );
     }
 
     /**

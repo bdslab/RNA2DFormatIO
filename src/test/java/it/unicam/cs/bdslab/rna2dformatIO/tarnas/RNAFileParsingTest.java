@@ -1,17 +1,32 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFileConstructor;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.WeakBond;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test parsing all supported formats.
@@ -44,9 +59,9 @@ class RNAFileParsingTest {
     }
 
     private static final List<WeakBond> EXPECTED_BONDS = List.of(
-            new WeakBond(1, 8),
-            new WeakBond(2, 7),
-            new WeakBond(3, 6)
+        new WeakBond(1, 8),
+        new WeakBond(2, 7),
+        new WeakBond(3, 6)
     );
 
     // -----------------------------------------------------------------------
@@ -76,8 +91,7 @@ class RNAFileParsingTest {
         RNAFile file = parse("sample.bpseq");
         var bonds = file.getStructure().getBonds();
         assertEquals(3, bonds.size());
-        assertTrue(bonds.containsAll(EXPECTED_BONDS),
-                "Bonds read different from expected");
+        assertTrue(bonds.containsAll(EXPECTED_BONDS), "Bonds read different from expected");
     }
 
     @Test
@@ -169,8 +183,7 @@ class RNAFileParsingTest {
         RNAFile file = parse("sample_no_seq.db");
 
         var seq = file.getStructure().getSequence();
-        assertTrue(seq == null || seq.isEmpty(),
-                "The sequence should be not present in the file DB_NO_SEQUENCE");
+        assertTrue(seq == null || seq.isEmpty(), "The sequence should be not present in the file DB_NO_SEQUENCE");
     }
 
     @Test
@@ -249,8 +262,10 @@ class RNAFileParsingTest {
     @Test
     void parseFASTAHasNoBonds() throws Exception {
         RNAFile file = parse("sample.fasta");
-        assertTrue(file.getStructure().getBonds().isEmpty(),
-                "FASTA do not contain structural information, bonds should be empty");
+        assertTrue(
+            file.getStructure().getBonds().isEmpty(),
+            "FASTA do not contain structural information, bonds should be empty"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -260,8 +275,8 @@ class RNAFileParsingTest {
     @Test
     void bpseqAndCTProduceSameStructure() throws Exception {
         var bpseq = parse("sample.bpseq").getStructure();
-        var ct    = parse("sample.ct").getStructure();
-        assertEquals(bpseq.getSize(),  ct.getSize());
+        var ct = parse("sample.ct").getStructure();
+        assertEquals(bpseq.getSize(), ct.getSize());
         assertEquals(bpseq.getBonds(), ct.getBonds());
         assertEquals(bpseq.getSequence(), ct.getSequence());
     }
@@ -269,8 +284,8 @@ class RNAFileParsingTest {
     @Test
     void bpseqAndAASProduceSameStructure() throws Exception {
         var bpseq = parse("sample.bpseq").getStructure();
-        var aas   = parse("sample.aas").getStructure();
-        assertEquals(bpseq.getSize(),  aas.getSize());
+        var aas = parse("sample.aas").getStructure();
+        assertEquals(bpseq.getSize(), aas.getSize());
         assertEquals(bpseq.getBonds(), aas.getBonds());
         assertEquals(bpseq.getSequence(), aas.getSequence());
     }
@@ -278,8 +293,8 @@ class RNAFileParsingTest {
     @Test
     void bpseqAndDBProduceSameStructure() throws Exception {
         var bpseq = parse("sample.bpseq").getStructure();
-        var db    = parse("sample.db").getStructure();
-        assertEquals(bpseq.getSize(),  db.getSize());
+        var db = parse("sample.db").getStructure();
+        assertEquals(bpseq.getSize(), db.getSize());
         assertEquals(bpseq.getBonds(), db.getBonds());
         assertEquals(bpseq.getSequence(), db.getSequence());
     }
@@ -291,8 +306,10 @@ class RNAFileParsingTest {
     @Test
     void pseudoknotFileIsParsedCorrectly() throws Exception {
         RNAFile file = parse("pseudoknot.bpseq");
-        assertTrue(file.getStructure().isPseudoknotted(),
-                "The structure in the file pseudoknot.bpseq should be a pseudoknot");
+        assertTrue(
+            file.getStructure().isPseudoknotted(),
+            "The structure in the file pseudoknot.bpseq should be a pseudoknot"
+        );
     }
 
     @Test

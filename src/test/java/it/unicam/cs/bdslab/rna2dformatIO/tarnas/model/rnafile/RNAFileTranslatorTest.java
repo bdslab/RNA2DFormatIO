@@ -1,13 +1,28 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure.WeakBond;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link RNAFileTranslator}.
@@ -34,12 +49,11 @@ class RNAFileTranslatorTest {
         structure.finalise();
 
         sourceFile = new RNAFile(
-                "test.bpseq",
-                List.of("# header line"),
-                List.of("1 A 8", "2 U 7", "3 G 0", "4 C 0",
-                        "5 A 0", "6 U 0", "7 G 2", "8 C 1"),
-                structure,
-                RNAFormat.BPSEQ
+            "test.bpseq",
+            List.of("# header line"),
+            List.of("1 A 8", "2 U 7", "3 G 0", "4 C 0", "5 A 0", "6 U 0", "7 G 2", "8 C 1"),
+            structure,
+            RNAFormat.BPSEQ
         );
     }
 
@@ -74,8 +88,7 @@ class RNAFileTranslatorTest {
         assertEquals("((....))".length(), result.getBody().get(1).length());
         // Verify that the structure does not contain pseudoknot (only rounded brackets)
         String db = result.getBody().get(1);
-        assertTrue(db.matches("[().]+"),
-                "DB without pseudoknot should only contain '(', ')' & '.'");
+        assertTrue(db.matches("[().]+"), "DB without pseudoknot should only contain '(', ')' & '.'");
     }
 
     // -----------------------------------------------------------------------
@@ -208,10 +221,9 @@ class RNAFileTranslatorTest {
     @Test
     void translationPreservesStructure() {
         // The structure should be the same after every translation
-        RNAFile db   = RNAFileTranslator.translateToDB(sourceFile);
+        RNAFile db = RNAFileTranslator.translateToDB(sourceFile);
         RNAFile bpseq = RNAFileTranslator.translateToBPSEQ(sourceFile);
-        assertEquals(db.getStructure().getBonds(),
-                bpseq.getStructure().getBonds());
+        assertEquals(db.getStructure().getBonds(), bpseq.getStructure().getBonds());
     }
 
     // -----------------------------------------------------------------------

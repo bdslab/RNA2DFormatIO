@@ -1,10 +1,26 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnastructure;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAInputFileParserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests per {@link RNASecondaryStructure}.
@@ -72,23 +88,20 @@ class RNASecondaryStructureTest {
     @Test
     void addDuplicateLeftIndexThrows() {
         structure.addBond(new WeakBond(1, 8));
-        assertThrows(RNAInputFileParserException.class,
-                () -> structure.addBond(new WeakBond(1, 5)));
+        assertThrows(RNAInputFileParserException.class, () -> structure.addBond(new WeakBond(1, 5)));
     }
 
     @Test
     void addDuplicateRightIndexThrows() {
         structure.addBond(new WeakBond(1, 8));
-        assertThrows(RNAInputFileParserException.class,
-                () -> structure.addBond(new WeakBond(3, 8)));
+        assertThrows(RNAInputFileParserException.class, () -> structure.addBond(new WeakBond(3, 8)));
     }
 
     @Test
     void addBondExceedingSizeWithSequenceThrows() {
         structure.setSequence("AUGCAUGC"); // length = 8
         structure.setSize(8);
-        assertThrows(RNAInputFileParserException.class,
-                () -> structure.addBond(new WeakBond(1, 9)));
+        assertThrows(RNAInputFileParserException.class, () -> structure.addBond(new WeakBond(1, 9)));
     }
 
     // -----------------------------------------------------------------------

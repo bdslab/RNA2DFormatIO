@@ -1,16 +1,31 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile;
 
 import it.unicam.cs.bdslab.RNASecondaryStructureLexer;
 import it.unicam.cs.bdslab.RNASecondaryStructureParser;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.listener.RNAFileListener;
+import java.io.IOException;
+import java.nio.file.Path;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
-import java.io.IOException;
-import java.nio.file.Path;
 
 /**
  * Singleton responsible for constructing {@link RNAFile} instances from input files
@@ -40,8 +55,7 @@ public class RNAFileConstructor {
      * @return the unique instance of this constructor
      */
     public static RNAFileConstructor getInstance() {
-        if (instance == null)
-            instance = new RNAFileConstructor();
+        if (instance == null) instance = new RNAFileConstructor();
         return instance;
     }
 
@@ -67,5 +81,4 @@ public class RNAFileConstructor {
         this.walker.walk(rnaFilelistener, tree);
         return this.rnaFilelistener.getRnaFile();
     }
-
 }

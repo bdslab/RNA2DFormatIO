@@ -1,14 +1,29 @@
+/*
+ * Copyright 2026 Francesco Palozzi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package it.unicam.cs.bdslab.rna2dformatIO.tarnas.controller;
+
+import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat.*;
 
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFileTranslator;
 import it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-
-import static it.unicam.cs.bdslab.rna2dformatIO.tarnas.model.rnafile.RNAFormat.*;
 
 /**
  * An implementation of the Translator Controller that accepts input from the
@@ -41,13 +56,21 @@ public class TranslatorController {
      */
     private TranslatorController() {
         conversionMatrix = Map.of(
-                AAS, List.of(AAS, AAS_NO_SEQUENCE, BPSEQ, CT, DB, DB_NO_SEQUENCE, FASTA),
-                AAS_NO_SEQUENCE, List.of(DB_NO_SEQUENCE),
-                BPSEQ, List.of(AAS, AAS_NO_SEQUENCE, CT, DB, DB_NO_SEQUENCE, FASTA),
-                CT, List.of(AAS, AAS_NO_SEQUENCE, BPSEQ, DB, DB_NO_SEQUENCE, FASTA),
-                DB, List.of(AAS, AAS_NO_SEQUENCE, DB, BPSEQ, CT, DB_NO_SEQUENCE, FASTA),
-                DB_NO_SEQUENCE, List.of(AAS_NO_SEQUENCE),
-                FASTA, List.of());
+            AAS,
+            List.of(AAS, AAS_NO_SEQUENCE, BPSEQ, CT, DB, DB_NO_SEQUENCE, FASTA),
+            AAS_NO_SEQUENCE,
+            List.of(DB_NO_SEQUENCE),
+            BPSEQ,
+            List.of(AAS, AAS_NO_SEQUENCE, CT, DB, DB_NO_SEQUENCE, FASTA),
+            CT,
+            List.of(AAS, AAS_NO_SEQUENCE, BPSEQ, DB, DB_NO_SEQUENCE, FASTA),
+            DB,
+            List.of(AAS, AAS_NO_SEQUENCE, DB, BPSEQ, CT, DB_NO_SEQUENCE, FASTA),
+            DB_NO_SEQUENCE,
+            List.of(AAS_NO_SEQUENCE),
+            FASTA,
+            List.of()
+        );
     }
 
     /**
@@ -58,10 +81,12 @@ public class TranslatorController {
      */
     public List<RNAFormat> getAvailableTranslations(RNAFormat rnaFormat) {
         return (rnaFormat == AAS || rnaFormat == DB)
-                ? this.conversionMatrix.get(rnaFormat).stream()
-                .filter(t -> t != rnaFormat)
-                .toList()
-                : this.conversionMatrix.get(rnaFormat);
+            ? this.conversionMatrix
+                  .get(rnaFormat)
+                  .stream()
+                  .filter(t -> t != rnaFormat)
+                  .toList()
+            : this.conversionMatrix.get(rnaFormat);
     }
 
     /**
