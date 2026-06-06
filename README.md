@@ -6,6 +6,12 @@ It is designed for researchers and developers working with RNA structure data wh
 
 ---
 
+## 📚 Documentation
+
+For detailed documentation please visit the [**RNA2DFormatIO Wiki**](https://github.com/bdslab/RNA2DFormatIO/wiki).
+
+---
+
 ## 🧬 Overview
 
 RNA secondary structures are represented in multiple incompatible formats across tools and databases (e.g., BPSEQ, CT, Dot-Bracket).  
